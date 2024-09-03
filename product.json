@@ -1,0 +1,10 @@
+{
+  "productName": "CodeFuse IDE",
+  "applicationName": "CodeFuseIDE",
+  "dataFolderName": ".codefuse-ide",
+  "urlProtocol": "codefuse-ide",
+  "darwinBundleIdentifier": "com.alipay.codefuse.ide",
+  "autoUpdaterConfigUrl": "https://render.alipay.com/p/yuyan/codefuse-ide-data_auto-update/zh_CN.json",
+  "commit": "",
+  "date": ""
+}

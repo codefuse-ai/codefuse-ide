@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      const theme = localStorage.getItem('theme');
+      try {
+        const themeObj = JSON.parse(theme);
+        if (themeObj.editorBackground) {
+          document.documentElement.style.backgroundColor = themeObj.editorBackground;
+        }
+      } catch (e) {
+        // do nothing
+      }
+    </script>
+    <meta charset="UTF-8" />
+    <title>Codefuse IDE</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      #main {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+  </body>
+</html>

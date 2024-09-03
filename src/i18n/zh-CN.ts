@@ -1,0 +1,46 @@
+export const localizationBundle = {
+  languageId: 'zh-CN',
+  languageName: 'Chinese',
+  localizedLanguageName: '中文(中国)',
+  contents: {
+    'common.about': '关于',
+    'common.preferences': '首选项',
+    'common.newWindow': '新建窗口',
+    'common.newWindowDesc': '打开新的窗口',
+
+    'custom.quick_open': '转到文件',
+    'custom.command_palette': '显示所有命令',
+    'custom.terminal_panel': '切换终端',
+    'custom.search_panel': '切换搜索面板',
+
+    'preference.ai.native.local_model.title': '本地模型',
+    'preference.ai.native.local_model.complete_url': '模型地址',
+    'preference.ai.native.local_model.api_key': 'API Key',
+    'preference.ai.native.local_model.chat': 'Chat',
+    'preference.ai.native.local_model.chat.model_name': 'Chat - 模型名称',
+    'preference.ai.native.local_model.chat.system_prompt': 'Chat - 系统提示词',
+    'preference.ai.native.local_model.chat.temperature': 'Chat - temperature',
+    'preference.ai.native.local_model.chat.max_tokens': 'Chat - max_tokens',
+    'preference.ai.native.local_model.chat.presence_penalty': 'Chat - presence_penalty',
+    'preference.ai.native.local_model.chat.top_p': 'Chat - top_p',
+    'preference.ai.native.local_model.code_completion': '代码补全',
+    'preference.ai.native.local_model.code_completion.model_name': '代码补全 - 模型名称',
+    'preference.ai.native.local_model.code_completion.model_name.tooltip': '默认和对话模型一致',
+    'preference.ai.native.local_model.code_completion.system_prompt': '代码补全 - 系统提示词',
+    'preference.ai.native.local_model.code_completion.user_prompt': '代码补全 - 用户提示词',
+    'preference.ai.native.local_model.code_completion.user_prompt.tooltip': '{prefix} 会替换为光标前代码，{suffix} 会替换为光标后代码',
+    'preference.ai.native.local_model.code_completion.temperature': '代码补全 - temperature',
+    'preference.ai.native.local_model.code_completion.max_tokens': '代码补全 - max_tokens',
+    'preference.ai.native.local_model.code_completion.presence_penalty': '代码补全 - presence_penalty',
+    'preference.ai.native.local_model.code_completion.top_p': '代码补全 - top_p',
+    'preference.ai.native.local_model.temperature.description': '采样温度，介于 0 和 2 之间。较高的值（如 0.8）将使输出更加随机，而较低的值（如 0.2）将使其更加集中性和确定性。\n通常建议只改变 top_p 或 temperature，不要两个都改',
+    'preference.ai.native.local_model.max_tokens.description': '聊天完成时可以生成的最大 token 数。',
+    'preference.ai.native.local_model.presence_penalty.description': '存在惩罚，介于 -2.0 和 2.0 之间的数字。正值会根据新生成的词汇是否出现在目前的文本中来进行惩罚，从而增加模型讨论新话题的可能性',
+    'preference.ai.native.local_model.top_p.description': '温度采样的一种替代方法，称为原子核抽样，模型只会考虑前 top_p 概率质量的标记结果。因此，0.1 表示仅考虑前 10% 概率质量的标记。\n通常建议只改变 top_p 或 temperature，不要两个都改',
+
+    'ai.local_model.noConfig': '为了更好的体验，请先配置 AI 模型服务',
+    'ai.local_model.go': '前往',
+
+    'autoUpdater.checkForUpdates': '检查更新'
+  },
+};

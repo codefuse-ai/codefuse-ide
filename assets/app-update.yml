@@ -1,0 +1,4 @@
+provider: generic
+url: ''
+channel: latest
+updaterCacheDirName: CodeFuseIDE-updater

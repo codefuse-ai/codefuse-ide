@@ -1,0 +1,155 @@
+{
+  "name": "codefuse-ide",
+  "version": "0.2.0",
+  "description": "CodeFuse AI Native IDE",
+  "main": "out/main",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "electron-rebuild": "node -r ts-node/register ./build/rebuild.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@code.alipay.com:cloud-ide/codefuse-ide.git"
+  },
+  "keywords": [
+    "AI",
+    "IDE"
+  ],
+  "author": {
+    "name": "CodeFuse"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-base": "^7.4.0",
+    "@electron-forge/plugin-webpack": "^7.4.0",
+    "@electron-forge/shared-types": "^7.4.0",
+    "@electron-forge/web-multi-logger": "^7.4.0",
+    "@types/debug": "^4",
+    "@types/js-yaml": "^4",
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "app-builder-bin": "^4.2.0",
+    "app-builder-lib": "24.13.3",
+    "asar": "^3.2.0",
+    "chalk": "^4.0.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "cross-env": "^7.0.3",
+    "css-loader": "6",
+    "debug": "^4.3.6",
+    "electron": "30.1.2",
+    "extract-zip": "^2.0.1",
+    "fast-glob": "^3.3.2",
+    "glob": "^11.0.0",
+    "html-webpack-plugin": "^5.6.0",
+    "less": "^4.2.0",
+    "less-loader": "^12.2.0",
+    "listr2": "^8.2.4",
+    "mini-css-extract-plugin": "^2.9.0",
+    "node-gyp": "^10.2.0",
+    "null-loader": "^4.0.1",
+    "style-loader": "^4.0.0",
+    "style-resources-loader": "^1.5.0",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript": "^5.5.3",
+    "undici-types": "^6.19.5",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4",
+    "webpack-merge": "^6.0.1",
+    "webpack-node-externals": "^3.0.0",
+    "yauzl": "^3.1.3"
+  },
+  "dependencies": {
+    "@opensumi/ide-addons": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-ai-native": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-comments": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-core-browser": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-core-common": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-core-electron-main": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-core-node": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-debug": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-decoration": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-design": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-editor": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-electron-basic": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-explorer": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-extension": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-extension-manager": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-extension-storage": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-file-scheme": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-file-search": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-file-service": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-file-tree-next": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-i18n": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-keymaps": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-logs": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-main-layout": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-markdown": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-markers": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-menu-bar": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-monaco": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-monaco-enhance": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-opened-editor": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-outline": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-output": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-overlay": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-preferences": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-process": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-quick-open": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-scm": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-search": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-status-bar": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-storage": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-task": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-terminal-next": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-testing": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-theme": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-toolbar": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-variable": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-webview": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-workspace": "3.3.1-next-1725350427.0",
+    "@opensumi/ide-workspace-edit": "3.3.1-next-1725350427.0",
+    "@opensumi/tree-sitter-wasm": "0.0.2",
+    "@vscode/spdlog": "^0.15.0",
+    "buffer": "^6.0.3",
+    "electron-updater": "6.2.1",
+    "js-yaml": "^4.1.0",
+    "mri": "^1.2.0",
+    "process": "^0.11.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "packageManager": "yarn@4.3.1",
+  "resolutions": {
+    "@rjsf/validator-ajv6": "5.4.0"
+  },
+  "dependenciesMeta": {
+    "@parcel/watcher": {
+      "built": false
+    },
+    "@vscode/spdlog": {
+      "built": false
+    },
+    "keytar": {
+      "built": false
+    },
+    "node-pty": {
+      "built": false
+    },
+    "nsfw": {
+      "built": false
+    },
+    "spdlog": {
+      "built": false
+    }
+  }
+}

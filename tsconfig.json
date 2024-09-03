@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2022",
+    "moduleResolution": "node",
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "noEmitOnError": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "strictFunctionTypes": false,
+    "jsx": "react",
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "dist",
+    "noUnusedLocals": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "useDefineForClassFields": false,
+    "lib": [
+      "DOM",
+      "ES2022",
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./typings"
+    ]
+  },
+  "include": [
+    "src",
+    "build",
+    "typings",
+  ],
+  "exclude": [
+    "node_modules",
+  ]
+}
