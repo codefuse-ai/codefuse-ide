@@ -1,6 +1,6 @@
 <p align="center">CodeFuse AI Native IDE</p>
 
-![perview](https://mdn.alipayobjects.com/huamei_aj2sia/afts/img/A*vFlaRLTDF-UAAAAAAAAAAAAADoSNAQ/original)
+![preview](https://mdn.alipayobjects.com/huamei_aj2sia/afts/img/A*9_-6Q462P6IAAAAAAAAAAAAADoSNAQ/original)
 
 ## Getting started
 
