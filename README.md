@@ -2,7 +2,7 @@
 
 <p align="center">AI Native IDE based on CodeFuse and OpenSumi.</p>
 
-![图片 1](https://github.com/user-attachments/assets/9b55b1a9-dd98-4f9e-a948-2f12dcaa67cf)
+![](https://github.com/user-attachments/assets/0b2bfe37-75ae-4cb6-9dfe-c394cde76357)
 
 [![Discussions][discussions-image]][discussions-url] [![Open in CodeBlitz][codeblitz-image]][codeblitz-url]
 
