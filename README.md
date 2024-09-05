@@ -24,7 +24,7 @@
 
 ### Preparation
 - install Node.js >= 20
-- can use npmmirror.com to speed up the installation in china
+- you can use npmmirror.com to speed up the installation in china
   - `yarn config set -H npmRegistryServer "https://registry.npmmirror.com"`
   - `export ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/`
 
