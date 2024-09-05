@@ -7,7 +7,7 @@
 [![Discussions][discussions-image]][discussions-url] [![Open in CodeBlitz][codeblitz-image]][codeblitz-url]
 
 [discussions-image]: https://img.shields.io/badge/discussions-on%20github-blue
-[discussions-url]: https://github.com/opensumi/core/discussions
+[discussions-url]: https://github.com/codefuse-ai/codefuse-ide/discussions
 [codeblitz-image]: https://img.shields.io/badge/Ant_Codespaces-Open_in_CodeBlitz-1677ff
 [codeblitz-url]: https://codeblitz.cloud.alipay.com/github/codefuse-ai/codefuse-ide
 [github-issues-url]: https://github.com/opensumi/core/issues
