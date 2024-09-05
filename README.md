@@ -34,3 +34,8 @@ yarn run electron-rebuild
 # start project
 yarn run start
 ```
+
+## Links
+
+- **CodeFuse**: https://codefuse.ai
+- **OpenSumi**: https://opensumi.com
