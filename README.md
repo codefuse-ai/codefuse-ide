@@ -4,7 +4,7 @@
 
 ![图片 1](https://github.com/user-attachments/assets/9b55b1a9-dd98-4f9e-a948-2f12dcaa67cf)
 
-[![Discussions][discussions-image]][discussions-url] [![Open in CodeBlitz][codeblitz-image]][codeblitz-url] [![Issues need help][help-wanted-image]][help-wanted-url]
+[![Discussions][discussions-image]][discussions-url] [![Open in CodeBlitz][codeblitz-image]][codeblitz-url]
 
 [discussions-image]: https://img.shields.io/badge/discussions-on%20github-blue
 [discussions-url]: https://github.com/opensumi/core/discussions
