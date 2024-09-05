@@ -14,6 +14,12 @@
 [help-wanted-image]: https://flat.badgen.net/github/label-issues/codefuse-ai/codefuse-ide/🤔%20help%20wanted/open
 [help-wanted-url]: https://github.com/codefuse-ai/codefuse-ide/issues?q=is%3Aopen+is%3Aissue+label%3A%22🤔+help+wanted%22
 
+## ✨ Features
+- **AI-Native Development Environment**: Enjoy an integrated development environment that leverages AI technologies to enhance productivity and streamline workflows.
+- **Open Model Integration**: Our platform supports the seamless integration of various models, allowing developers to customize and extend functionality according to their needs.
+- **VS Code Plugin Compatibility**: Benefit from a rich ecosystem of plugins by ensuring compatibility with VS Code extensions, enabling you to leverage existing tools and resources.
+
+
 ## Getting started
 
 ### Preparation
