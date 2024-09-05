@@ -66,7 +66,9 @@ export class ElectronMainApp {
           app.removeListener('before-quit', handleBeforeQuit)
           app.removeListener('window-all-closed', handleWindowAllClose)
           this.logger.debug('lifecycle#will-quit')
-          app.quit()
+          setTimeout(() => {
+            app.quit()
+          })
         })
     })
   }
