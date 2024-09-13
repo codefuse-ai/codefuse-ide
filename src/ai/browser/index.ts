@@ -6,8 +6,8 @@ import { AIRunContribution } from './ai-run.contribution'
 import { AICommandPromptManager } from './command/command-prompt-manager'
 import { AICommandService } from './command/command.service'
 import { InlineChatOperationModel } from './inline-chat-operation'
-import { AILocalModelContribution } from './ai-local-model.contribution'
-import { AILocalModelServicePath } from '../common'
+import { AIModelContribution } from './ai-model.contribution'
+import { AIModelServicePath } from '../common'
 
 export * from './constants'
 
@@ -19,12 +19,12 @@ export class AIFeatureModule extends BrowserModule {
     AICommandPromptManager,
     AICommandService,
     InlineChatOperationModel,
-    AILocalModelContribution,
+    AIModelContribution,
   ];
 
   backServices = [
     {
-      servicePath: AILocalModelServicePath,
+      servicePath: AIModelServicePath,
     }
   ]
 }

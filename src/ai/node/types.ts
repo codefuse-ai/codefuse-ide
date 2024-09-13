@@ -49,3 +49,19 @@ export interface ChatCompletionChunk {
   system_fingerprint: string;
   choices: ChunkChoice[];
 }
+
+export interface CompletionChoice {
+  finish_reason: string;
+  index: number;
+  text: string;
+}
+
+export interface Completion {
+  id: string;
+  choices: Array<CompletionChoice>;
+  created: number;
+  model: string;
+  object: 'text_completion';
+  system_fingerprint?: string;
+  usage?: Usage;
+}

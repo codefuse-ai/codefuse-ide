@@ -5,8 +5,8 @@ import { IShellIntegrationService } from '@opensumi/ide-terminal-next/lib/node/s
 
 import { ShellIntegrationService } from './shell-integration'
 import { AIBackService } from './ai-back.service'
-import { AILocalModelServiceProxy, AILocalModelService } from './local-model.service'
-import { AILocalModelServicePath, IAILocalModelServiceProxy } from '../common'
+import { AIModelServiceProxy, AIModelService } from './model.service'
+import { AIModelServicePath, IAIModelServiceProxy } from '../common'
 
 @Injectable()
 export class AIServiceModule extends NodeModule {
@@ -22,19 +22,19 @@ export class AIServiceModule extends NodeModule {
       override: true,
     },
     {
-      token: AILocalModelService,
-      useClass: AILocalModelService,
+      token: AIModelService,
+      useClass: AIModelService,
     },
     {
-      token: IAILocalModelServiceProxy,
-      useClass: AILocalModelServiceProxy,
+      token: IAIModelServiceProxy,
+      useClass: AIModelServiceProxy,
     }
   ]
 
   backServices = [
     {
-      servicePath: AILocalModelServicePath,
-      token: IAILocalModelServiceProxy,
+      servicePath: AIModelServicePath,
+      token: IAIModelServiceProxy,
     }
   ]
 }

@@ -9,8 +9,8 @@ import { SumiReadableStream } from '@opensumi/ide-utils/lib/stream';
 import type { Response, fetch as FetchType } from 'undici-types';
 import { ILogServiceManager } from '@opensumi/ide-logs';
 
-import { ChatCompletionChunk, ChatCompletion } from './types';
-import { AILocalModelService } from './local-model.service'
+import { ChatCompletionChunk, ChatCompletion, Completion } from './types';
+import { AIModelService } from './model.service'
 
 @Injectable()
 export class AIBackService extends BaseAIBackService implements IAIBackService {
@@ -19,8 +19,8 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
   @Autowired(ILogServiceManager)
   private readonly loggerManager: ILogServiceManager;
 
-  @Autowired(AILocalModelService)
-  localModelService: AILocalModelService
+  @Autowired(AIModelService)
+  modelService: AIModelService
 
   private historyMessages: {
     role: ChatCompletionRequestMessageRoleEnum;
@@ -33,64 +33,99 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
   }
 
   override async request(input: string, options: IAIBackServiceOption, cancelToken?: CancellationToken): Promise<IAIBackServiceResponse> {
-    // this.historyMessages.push({ role: ChatCompletionRequestMessageRoleEnum.User, content: input })
-    // if (this.historyMessages.length > 50) {
-    //   this.historyMessages = this.historyMessages.slice(-50)
-    // }
-    const message = [{ role: ChatCompletionRequestMessageRoleEnum.User, content: input }]
-
-    const response = await this.fetchModel(message, {
-      isCodeCompletion: false,
-      stream: false,
-    }, cancelToken);
-
-    if (!response) {
-      this.logger.log('ai request failed, ai local model config error');
+    const config = this.checkConfig()
+    if (!config) {
       return {
         errorCode: 1,
-        errorMsg: 'ai local model config error',
+        errorMsg: 'miss config',
         data: ''
       }
     }
 
-    const data = await response.json() as ChatCompletion
-    const content = data?.choices?.[0]?.message?.content;
-
-    if (content) {
-      this.historyMessages.push({ role: ChatCompletionRequestMessageRoleEnum.Assistant, content });
-    }
-
-    return {
-      errorCode: 0,
-      data: content,
-    }
-  }
-
-  override async requestStream(input: string, options: IAIBackServiceOption, cancelToken?: CancellationToken) {
-    // this.historyMessages.push({ role: ChatCompletionRequestMessageRoleEnum.User, content: input })
-    // if (this.historyMessages.length > 50) {
-    //   this.historyMessages = this.historyMessages.slice(-50)
-    // }
-    const { chatSystemPrompt } = this.localModelService.config || {}
-    const message = [
-      ...(chatSystemPrompt ? [
+    const messages = [
+      ...(config.chatSystemPrompt ? [
         {
           role: ChatCompletionRequestMessageRoleEnum.System,
-          content: chatSystemPrompt,
+          content: config.chatSystemPrompt,
         },
       ] : []),
       { role: ChatCompletionRequestMessageRoleEnum.User, content: input }
     ]
 
-    const response = await this.fetchModel(message, {
-      isCodeCompletion: false,
-      stream: true,
-    }, cancelToken);
+    const response = await this.fetchModel(
+      this.getCompletionUrl(config.baseUrl),
+      {
+        model: config.chatModelName,
+        messages,
+        stream: false,
+        max_tokens: config.chatMaxTokens,
+        temperature: config.chatTemperature,
+        presence_penalty: config.chatPresencePenalty,
+        frequency_penalty: config.codeFrequencyPenalty,
+        top_p: config.chatTopP,
+      },
+      cancelToken
+    );
 
+    if (!response.ok) {
+      this.logger.error(`ai request failed: status: ${response.status}, body: ${await response.text()}`);
+      return {
+        errorCode: 1,
+        errorMsg: `request failed: ${response.status}`,
+      }
+    }
+
+    try {
+      const data = await response.json() as ChatCompletion
+      const content = data?.choices?.[0]?.message?.content;
+  
+      return {
+        errorCode: 0,
+        data: content,
+      }
+    } catch (err: any) {
+      this.logger.error(`ai request body parse error: ${err?.message}`);
+      throw err
+    }
+  }
+
+  override async requestStream(input: string, options: IAIBackServiceOption, cancelToken?: CancellationToken) {
     const readableSteam = new SumiReadableStream<IChatContent>()
 
-    if (!response) {
-      readableSteam.emitError(new Error('ai local model config error'));
+    const config = this.checkConfig()
+    if (!config) {
+      readableSteam.emitError(new Error('miss config'));
+      readableSteam.end();
+      return readableSteam
+    }
+    const messages = [
+      ...(config.chatSystemPrompt ? [
+        {
+          role: ChatCompletionRequestMessageRoleEnum.System,
+          content: config.chatSystemPrompt,
+        },
+      ] : []),
+      { role: ChatCompletionRequestMessageRoleEnum.User, content: input }
+    ]
+  
+    const response = await this.fetchModel(
+      this.getCompletionUrl(config.baseUrl),
+      {
+        model: config.chatModelName,
+        messages,
+        stream: true,
+        max_tokens: config.chatMaxTokens,
+        temperature: config.chatTemperature,
+        presence_penalty: config.chatPresencePenalty,
+        frequency_penalty: config.codeFrequencyPenalty,
+        top_p: config.chatTopP,
+      },
+      cancelToken,
+    )
+
+    if (!response.ok) {
+      this.logger.error(`ai request stream failed: status: ${response.status}, body: ${await response.text()}`);
+      readableSteam.emitError(new Error('Readable Stream Abort'));
       readableSteam.end();
       return readableSteam
     }
@@ -102,12 +137,6 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
       return readableSteam
     }
 
-    if (!response.ok) {
-      this.logger.error(`ai request stream failed: status: ${response.status}, body: ${await response.text()}`);
-      readableSteam.emitError(new Error('Readable Stream Abort'));
-      readableSteam.end();
-      return readableSteam
-    }
 
     const { logger } = this;
 
@@ -157,104 +186,120 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
   }
   
   async requestCompletion(input: IAICompletionOption, cancelToken?: CancellationToken) {
-    const { codeCompletionSystemPrompt, codeCompletionUserPrompt } = this.localModelService.config || {}
-    if (!codeCompletionUserPrompt) {
-      this.logger.warn('miss config.codeCompletionUserPrompt')
+    const config = this.checkConfig(true)
+    if (!config) {
       return {
         sessionId: input.sessionId,
         codeModelList: [],
       }
     }
-    const userContent = codeCompletionUserPrompt.replace('{prefix}', input.prompt).replace('{suffix}', input.suffix || '')
-    const messages = [
-      ...(codeCompletionSystemPrompt ? [
-        {
-          role: ChatCompletionRequestMessageRoleEnum.System,
-          content: codeCompletionSystemPrompt,
-        },
-      ] : []),
+
+    const response = await this.fetchModel(
+      this.getCompletionUrl(config.baseUrl, !config.codeFimTemplate),
       {
-        role: ChatCompletionRequestMessageRoleEnum.User,
-        content: userContent,
-      }
-    ]
-    const response = await this.fetchModel(messages, {
-      isCodeCompletion: true,
-      stream: false,
-    }, cancelToken);
+        stream: false,
+        model: config.codeModelName || config.chatModelName,
+        max_tokens: config.codeMaxTokens,
+        temperature: config.codeTemperature,
+        presence_penalty: config.codePresencePenalty,
+        frequency_penalty: config.codeFrequencyPenalty,
+        top_p: config.codeTopP,
+        ...(config.codeFimTemplate ? {
+          messages: [
+            ...(config.codeSystemPrompt ? [
+              {
+                role: ChatCompletionRequestMessageRoleEnum.System,
+                content: config.codeSystemPrompt,
+              },
+            ] : []),
+            {
+              role: ChatCompletionRequestMessageRoleEnum.User,
+              content: config.codeFimTemplate.replace('{prefix}', input.prompt).replace('{suffix}', input.suffix || ''),
+            }
+          ]
+        } : {
+          prompt: input.prompt,
+          suffix: input.suffix,
+        })
+      },
+      cancelToken
+    );
 
-    if (!response) {
+    if (!response.ok) {
+      this.logger.error(`ai request completion failed: status: ${response.status}, body: ${await response.text()}`);
       return {
         sessionId: input.sessionId,
         codeModelList: [],
       }
     }
-    const data = await response.json() as ChatCompletion
 
-    const content = data?.choices?.[0]?.message?.content;
-    if (!content) {
+    try {
+      const data = await response.json() as ChatCompletion | Completion
+      const content = config.codeFimTemplate ? (data as ChatCompletion)?.choices?.[0]?.message?.content : (data as Completion)?.choices?.[0]?.text;
+      if (!content) {
+        return {
+          sessionId: input.sessionId,
+          codeModelList: [],
+        }
+      }
       return {
         sessionId: input.sessionId,
-        codeModelList: [],
+        codeModelList: [{ content }],
       }
-    }
-    return {
-      sessionId: input.sessionId,
-      codeModelList: [{ content }],
+    } catch (err: any) {
+      this.logger.error(`ai request completion body parse error: ${err?.message}`);
+      throw err
     }
   }
 
-  private async fetchModel(messages: ChatCompletionRequestMessage[], { isCodeCompletion = false, stream = false }, cancelToken?: CancellationToken): Promise<Response | null> {
+  private checkConfig(isCodeCompletion = false) {
+    const { config } = this.modelService
+    if (!config) {
+      this.logger.warn('miss config')
+      return null
+    }
+    if (!config.baseUrl) {
+      this.logger.warn('miss config baseUrl')
+      return null
+    }
+    const modelName = isCodeCompletion ? (config.codeModelName || config.chatModelName) : config.chatModelName
+    if (!modelName) {
+      this.logger.warn('miss config modelName')
+      return null
+    }
+    return config
+  }
+
+  private async fetchModel(url: string | URL, body: Record<string, any>, cancelToken?: CancellationToken): Promise<Response> {
     const controller = new AbortController();
     const signal = controller.signal;
-    const { config } = this.localModelService
-    if (!config || !config.completeUrl || !config.chatModelName) {
-      if (!config) {
-        this.logger.warn('miss config')
-        return null
-      }
-      if (!config.completeUrl) {
-        this.logger.warn('miss config.completeUrl')
-        return null
-      }
-      if (!config.chatModelName) {
-        this.logger.warn('miss config.modelName')
-        return null
-      }
-    }
+
+    const { config } = this.modelService
 
     cancelToken?.onCancellationRequested(() => {
       controller.abort();
     });
 
     return (fetch as typeof FetchType)(
-      config.completeUrl,
+      url,
       {
         signal,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
-          ...(config.apiKey ? {
+          ...(config?.apiKey ? {
             Authorization: `Bearer ${config.apiKey}`
           } : null),
         },
-        body: JSON.stringify({
-          model: isCodeCompletion ? (config.codeCompletionModelName || config.chatModelName) : config.chatModelName,
-          messages: messages,
-          stream,
-          ...(isCodeCompletion ? {
-            max_tokens: config.codeCompletionMaxTokens,
-            temperature: config.codeCompletionTemperature,
-            presence_penalty: config.codeCompletionPresencePenalty,
-            top_p: config.codeCompletionTopP,
-          } : {
-            max_tokens: config.chatMaxTokens,
-            temperature: config.chatTemperature,
-            presence_penalty: config.chatPresencePenalty,
-            top_p: config.chatTopP,
-          })
-        }),
+        body: JSON.stringify(body),
       },
     );
+  }
+
+  private getCompletionUrl(baseUrl: string, supportFim = false) {
+    if (!baseUrl.endsWith('/')) {
+      baseUrl += '/'
+    }
+    return new URL(supportFim ? 'completions' : 'chat/completions', baseUrl);
   }
 }
