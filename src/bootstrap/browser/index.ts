@@ -170,9 +170,11 @@ async function renderApp() {
     extensionStorageDirName: electronEnv.metadata.environment.dataFolderName,
     extWorkerHost: electronEnv.metadata.workerHostEntry ? URI.file(electronEnv.metadata.workerHostEntry).toString() : undefined,
     defaultPreferences: {
-      [AINativeSettingSectionsId.InlineCompletionsPromptEngineeringEnabled]: false,
       'settings.userBeforeWorkspace': true,
       'general.icon': 'vs-seti',
+      [AINativeSettingSectionsId.IntelligentCompletionsPromptEngineeringEnabled]: false,
+      // 总是显示智能提示
+      [AINativeSettingSectionsId.IntelligentCompletionsAlwaysVisible]: true,
     },
     onigWasmUri: URI.file(electronEnv.onigWasmPath).toString(true),
     treeSitterWasmDirectoryUri: URI.file(electronEnv.treeSitterWasmDirectoryPath).toString(true),
