@@ -44,6 +44,7 @@ export const localizationBundle = {
     'ai.model.noConfig': 'Please configure the AI model service for a better experience',
     'ai.model.go': 'Go',
 
-    'autoUpdater.checkForUpdates': 'Check for Updates...'
+    'autoUpdater.checkForUpdates': 'Check for Updates...',
+    'codefuse-ide.openLogDir': 'Open Log Folder',
   },
 };

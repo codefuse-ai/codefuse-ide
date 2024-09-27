@@ -6,10 +6,12 @@ import {
   IChatContent,
   IChatProgress,
   IAIBackService,
+  CancellationToken,
+  ChatResponse,
 } from '@opensumi/ide-core-common';
 import { ClientAppContribution, Domain, getIcon } from '@opensumi/ide-core-browser';
 import { ComponentContribution, ComponentRegistry } from '@opensumi/ide-core-browser/lib/layout';
-import { AINativeCoreContribution, ERunStrategy, IChatFeatureRegistry, IInlineChatFeatureRegistry, IRenameCandidatesProviderRegistry, ITerminalProviderRegistry, TChatSlashCommandSend, TerminalSuggestionReadableStream } from '@opensumi/ide-ai-native/lib/browser/types';
+import { AINativeCoreContribution, ERunStrategy, IChatFeatureRegistry, IInlineChatFeatureRegistry, IProblemFixContext, IProblemFixProviderRegistry, IRenameCandidatesProviderRegistry, ITerminalProviderRegistry, TChatSlashCommandSend, TerminalSuggestionReadableStream } from '@opensumi/ide-ai-native/lib/browser/types';
 import { ICodeEditor, MarkdownString, NewSymbolNameTag } from '@opensumi/ide-monaco';
 import { MessageService } from '@opensumi/ide-overlay/lib/browser/message.service';
 import { BaseTerminalDetectionLineMatcher, JavaMatcher, MatcherType, NodeMatcher, NPMMatcher, ShellMatcher, TSCMatcher } from '@opensumi/ide-ai-native/lib/browser/contrib/terminal/matcher';
@@ -516,6 +518,37 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       });
 
       return stream;
+    });
+  }
+
+
+  registerProblemFixFeature(registry: IProblemFixProviderRegistry): void {
+    registry.registerHoverFixProvider({
+      provideFix: async (
+        editor: ICodeEditor,
+        context: IProblemFixContext,
+        token: CancellationToken,
+      ): Promise<ChatResponse | InlineChatController> => {
+        const { marker, editRange } = context;
+
+        const prompt = `原始代码内容:
+\`\`\`
+${editor.getModel()!.getValueInRange(editRange)}
+\`\`\`
+
+        lint error 信息:
+        
+        ${marker.message}.
+
+        请根据 lint error 信息修复代码！
+        不需要任何解释，只要返回修复后的代码块内容`;
+
+        const controller = new InlineChatController({ enableCodeblockRender: true });
+        const stream = await this.aiBackService.requestStream(prompt, {}, token);
+        controller.mountReadable(stream);
+
+        return controller;
+      },
     });
   }
 }

@@ -44,6 +44,7 @@ export const localizationBundle = {
     'ai.model.noConfig': '为了更好的体验，请先配置 AI 模型服务',
     'ai.model.go': '前往',
 
-    'autoUpdater.checkForUpdates': '检查更新'
+    'autoUpdater.checkForUpdates': '检查更新',
+    'codefuse-ide.openLogDir': '打开日志文件夹',
   },
 };
