@@ -60,6 +60,7 @@ export class WindowsManager {
         environment: {
           dataFolderName: this.environmentService.dataFolderName,
           isDev: this.environmentService.isDev,
+          logRoot: this.environmentService.logRoot,
         },
       },
       {
