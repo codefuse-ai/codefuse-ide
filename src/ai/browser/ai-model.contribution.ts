@@ -229,7 +229,6 @@ export class AIModelContribution implements PreferenceContribution, SettingContr
   }
 
   private async checkModelConfig(values: Record<string, any>) {
-    console.log(222, values)
     if (values.baseUrl && values.chatModelName) {
       return true
     }
