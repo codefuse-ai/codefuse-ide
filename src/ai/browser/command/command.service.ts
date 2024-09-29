@@ -703,7 +703,6 @@ export class AICommandService {
   async requestForClassifyCommand(commands: Command[]) {
     const prompt = this.promptManager.groupCommand(commands.map((c) => c.id).join(','));
     const groupReply = await this.requestToModel(prompt);
-    console.log(111, prompt, groupReply)
 
     const groupReg = new RegExp(
       `\\[(?<groupName>${Object.keys(this.commandGroups).join('|')})\\]:\\s?(?<commandList>.*)`,
