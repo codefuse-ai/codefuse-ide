@@ -7,7 +7,8 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "electron-rebuild": "node -r ts-node/register ./build/rebuild.ts"
+    "electron-rebuild": "node -r ts-node/register ./build/rebuild.ts",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "repository": {
     "type": "git",
@@ -121,6 +122,7 @@
     "@opensumi/tree-sitter-wasm": "0.0.2",
     "@vscode/spdlog": "^0.15.0",
     "buffer": "^6.0.3",
+    "conventional-changelog-cli": "^5.0.0",
     "electron-updater": "6.2.1",
     "js-yaml": "^4.1.0",
     "mri": "^1.2.0",
