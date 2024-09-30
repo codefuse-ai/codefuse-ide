@@ -20,8 +20,11 @@
 - **Open Model Integration**: Our platform supports the seamless integration of various models, allowing developers to customize and extend functionality according to their needs.
 - **VS Code Extension Compatibility**: Benefit from a rich ecosystem of plugins by ensuring compatibility with VS Code extensions, enabling you to leverage existing tools and resources.
 
-
 ## Getting started
+
+See https://github.com/codefuse-ai/codefuse-ide/releases
+
+## Contributing
 
 ### Preparation
 - install Node.js >= 20
