@@ -1,6 +1,6 @@
 {
   "name": "codefuse-ide",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "CodeFuse AI Native IDE",
   "main": "out/main",
   "scripts": {
