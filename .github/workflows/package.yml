@@ -1,4 +1,4 @@
-name: PACKAGE
+name: Package
 
 # Cancel prev CI if new commit come
 concurrency:
@@ -25,7 +25,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest]
         node-version: [20.x]
 
     steps:
