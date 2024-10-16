@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.3](https://code.alipay.com/cloud-ide/codefuse-ide/compare/v0.6.2...v0.6.3) (2024-10-16)
+
+
+### Features
+
+* add minor ([551a6b2](https://code.alipay.com/cloud-ide/codefuse-ide/commit/551a6b2a42618ad530d6713475b5be26f1864b07))
+
+
+### Bug Fixes
+
+* **deps:** update opensumi packages to v3.4.4 ([992b6d6](https://code.alipay.com/cloud-ide/codefuse-ide/commit/992b6d6431454eb036a22ead83d23b84925e4291))
+
 ### 0.6.2 (2024-10-11)
 
 
