@@ -123,7 +123,7 @@
     "@opensumi/ide-webview": "3.4.4",
     "@opensumi/ide-workspace": "3.4.4",
     "@opensumi/ide-workspace-edit": "3.4.4",
-    "@opensumi/tree-sitter-wasm": "0.0.2",
+    "@opensumi/tree-sitter-wasm": "1.1.2",
     "@vscode/spdlog": "^0.15.0",
     "buffer": "^6.0.3",
     "electron-updater": "6.3.0",
