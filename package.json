@@ -31,7 +31,7 @@
     "@electron-forge/plugin-base": "^7.4.0",
     "@electron-forge/plugin-webpack": "^7.4.0",
     "@electron-forge/shared-types": "^7.4.0",
-    "@electron-forge/web-multi-logger": "^7.4.0",
+    "@electron-forge/web-multi-logger": "^7.5.0",
     "@types/debug": "^4",
     "@types/js-yaml": "^4",
     "@types/node": "^22.0.0",
