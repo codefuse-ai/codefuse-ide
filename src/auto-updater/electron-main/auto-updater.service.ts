@@ -128,6 +128,7 @@ export class AutoUpdaterService {
 
   init() {
     if (this.#initialized) return
+    this.#initialized = true
     autoUpdater.autoDownload = false
     autoUpdater.disableDifferentialDownload = true
     autoUpdater.logger = this.logger;
