@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.4](https://code.alipay.com/cloud-ide/codefuse-ide/compare/v0.6.3...v0.6.4) (2024-10-16)
+
+
+### Bug Fixes
+
+* set initialized after init ([b95d7b0](https://code.alipay.com/cloud-ide/codefuse-ide/commit/b95d7b04cee5185e6f8d0dcfab4dd481e0be106e))
+
 ### [0.6.3](https://code.alipay.com/cloud-ide/codefuse-ide/compare/v0.6.2...v0.6.3) (2024-10-16)
 
 
