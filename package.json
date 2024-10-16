@@ -53,7 +53,7 @@
     "html-webpack-plugin": "^5.6.0",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
-    "listr2": "^8.2.4",
+    "listr2": "^8.2.5",
     "mini-css-extract-plugin": "^2.9.0",
     "node-gyp": "^10.2.0",
     "null-loader": "^4.0.1",

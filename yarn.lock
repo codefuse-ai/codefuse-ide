@@ -3680,7 +3680,7 @@ __metadata:
     js-yaml: "npm:^4.1.0"
     less: "npm:^4.2.0"
     less-loader: "npm:^12.2.0"
-    listr2: "npm:^8.2.4"
+    listr2: "npm:^8.2.5"
     mini-css-extract-plugin: "npm:^2.9.0"
     mri: "npm:^1.2.0"
     node-gyp: "npm:^10.2.0"
@@ -7390,9 +7390,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"listr2@npm:^8.2.4":
-  version: 8.2.4
-  resolution: "listr2@npm:8.2.4"
+"listr2@npm:^8.2.5":
+  version: 8.2.5
+  resolution: "listr2@npm:8.2.5"
   dependencies:
     cli-truncate: "npm:^4.0.0"
     colorette: "npm:^2.0.20"
@@ -7400,7 +7400,7 @@ __metadata:
     log-update: "npm:^6.1.0"
     rfdc: "npm:^1.4.1"
     wrap-ansi: "npm:^9.0.0"
-  checksum: 10/344d2397e127bf802935925e95b54468eef745fbbaf9326eb33a1634ae2d6e86cdb527ef48cb83a19a50671955d39b3e2608c74db85530df07b5674f5de115e1
+  checksum: 10/c76542f18306195e464fe10203ee679a7beafa9bf0dc679ebacb416387cca8f5307c1d8ba35483d26ba611dc2fac5a1529733dce28f2660556082fb7eebb79f9
   languageName: node
   linkType: hard
 
