@@ -274,12 +274,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/plugin-base@npm:7.4.0, @electron-forge/plugin-base@npm:^7.4.0":
+"@electron-forge/plugin-base@npm:7.4.0":
   version: 7.4.0
   resolution: "@electron-forge/plugin-base@npm:7.4.0"
   dependencies:
     "@electron-forge/shared-types": "npm:7.4.0"
   checksum: 10/3c22b9ee9d725a1c443e384e1f0326be8caa54381be1dfe8333b45e6e34bf7b495eab45c9281a466ad2f990242169044ca35b5fd21c13ad925fa284e2e558c01
+  languageName: node
+  linkType: hard
+
+"@electron-forge/plugin-base@npm:^7.5.0":
+  version: 7.5.0
+  resolution: "@electron-forge/plugin-base@npm:7.5.0"
+  dependencies:
+    "@electron-forge/shared-types": "npm:7.5.0"
+  checksum: 10/8e528248b92902e9ca70fbe7f3604c274fb59d40636e427d9845afa6bc6e516ab572652c26625a4646ba433b9a812c05be8cba3e9a19a1ad3495e541e6576f23
   languageName: node
   linkType: hard
 
@@ -322,6 +331,18 @@ __metadata:
     "@electron/rebuild": "npm:^3.2.10"
     listr2: "npm:^7.0.2"
   checksum: 10/0be4502de8b497acaab32d79768bd595a06e87f090669675d2952605534cdb5b36756ad47a6bacc8d7239ed805773fe725df7316c7502e33416ccd483af81ee8
+  languageName: node
+  linkType: hard
+
+"@electron-forge/shared-types@npm:7.5.0":
+  version: 7.5.0
+  resolution: "@electron-forge/shared-types@npm:7.5.0"
+  dependencies:
+    "@electron-forge/tracer": "npm:7.5.0"
+    "@electron/packager": "npm:^18.3.5"
+    "@electron/rebuild": "npm:^3.2.10"
+    listr2: "npm:^7.0.2"
+  checksum: 10/d78ea8ed8ee11c0ad66bc7cc67ca56b0df9e1ddd6fc5e26229188fc7b42385031846eac4f27ff58128825969be9bef465b756094c254078172ee9d3eb5dade6c
   languageName: node
   linkType: hard
 
@@ -391,6 +412,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@electron-forge/tracer@npm:7.5.0":
+  version: 7.5.0
+  resolution: "@electron-forge/tracer@npm:7.5.0"
+  dependencies:
+    chrome-trace-event: "npm:^1.0.3"
+  checksum: 10/46187a5b955fed410a163649570c08b7aeb0f7aa9d1335edc22d0f447db4623d8e4f76c18734157084eefcd9aa8c83106691be1cd82a0dbb08cb69276fc699a2
+  languageName: node
+  linkType: hard
+
 "@electron-forge/web-multi-logger@npm:7.4.0":
   version: 7.4.0
   resolution: "@electron-forge/web-multi-logger@npm:7.4.0"
@@ -427,6 +457,20 @@ __metadata:
   bin:
     asar: bin/asar.js
   checksum: 10/2ead53564c430fd4252a76e754936aab144e4aea968b2d9b06c8327d6a7ca9c082a1230d9e00f79d8087f3882c1a76f95c638c3290c7b0e76d8ebed2d552f97b
+  languageName: node
+  linkType: hard
+
+"@electron/asar@npm:^3.2.13":
+  version: 3.2.13
+  resolution: "@electron/asar@npm:3.2.13"
+  dependencies:
+    "@types/glob": "npm:^7.1.0"
+    commander: "npm:^5.0.0"
+    glob: "npm:^7.1.6"
+    minimatch: "npm:^3.0.4"
+  bin:
+    asar: bin/asar.js
+  checksum: 10/361a8a495446b9d0e4acd42dea490bc4722f96e655d01cc2414e3923b1cba7dfcc4dea69f52400316aabc6f404843deebb70d50c03fd36b4638bdf1c8976ee4a
   languageName: node
   linkType: hard
 
@@ -550,6 +594,35 @@ __metadata:
   bin:
     electron-packager: bin/electron-packager.js
   checksum: 10/613f0d336fba061d26f3a79b8dd228c6e0d9957c01f7e4438c98f7add062451869028e018c6752d0b9345b5fe4635b2fe10bd0a64306d8a194a544c1febbf5eb
+  languageName: node
+  linkType: hard
+
+"@electron/packager@npm:^18.3.5":
+  version: 18.3.5
+  resolution: "@electron/packager@npm:18.3.5"
+  dependencies:
+    "@electron/asar": "npm:^3.2.13"
+    "@electron/get": "npm:^3.0.0"
+    "@electron/notarize": "npm:^2.1.0"
+    "@electron/osx-sign": "npm:^1.0.5"
+    "@electron/universal": "npm:^2.0.1"
+    "@electron/windows-sign": "npm:^1.0.0"
+    debug: "npm:^4.0.1"
+    extract-zip: "npm:^2.0.0"
+    filenamify: "npm:^4.1.0"
+    fs-extra: "npm:^11.1.0"
+    galactus: "npm:^1.0.0"
+    get-package-info: "npm:^1.0.0"
+    junk: "npm:^3.1.0"
+    parse-author: "npm:^2.0.0"
+    plist: "npm:^3.0.0"
+    resedit: "npm:^2.0.0"
+    resolve: "npm:^1.1.6"
+    semver: "npm:^7.1.3"
+    yargs-parser: "npm:^21.1.1"
+  bin:
+    electron-packager: bin/electron-packager.js
+  checksum: 10/05549371cdea06ce991913f67fd3a431fc68eb52767192b21e0795872c5cddd7333a03cf761e24d70f2ad1924880e85c02b58d34d8ac6b8db1027b688bbdd1db
   languageName: node
   linkType: hard
 
@@ -1919,7 +1992,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/glob@npm:^7.1.1":
+"@types/glob@npm:^7.1.0, @types/glob@npm:^7.1.1":
   version: 7.2.0
   resolution: "@types/glob@npm:7.2.0"
   dependencies:
@@ -3525,7 +3598,7 @@ __metadata:
     "@electron-forge/cli": "npm:^7.4.0"
     "@electron-forge/maker-squirrel": "npm:^7.4.0"
     "@electron-forge/maker-zip": "npm:^7.4.0"
-    "@electron-forge/plugin-base": "npm:^7.4.0"
+    "@electron-forge/plugin-base": "npm:^7.5.0"
     "@electron-forge/plugin-webpack": "npm:^7.4.0"
     "@electron-forge/shared-types": "npm:^7.4.0"
     "@electron-forge/web-multi-logger": "npm:^7.5.0"
