@@ -1,0 +1,109 @@
+diff --git a/node_modules/@opensumi/ide-core-browser/lib/common/common.contribution.js b/node_modules/@opensumi/ide-core-browser/lib/common/common.contribution.js
+index d65edc6..f0091b5 100644
+--- a/node_modules/@opensumi/ide-core-browser/lib/common/common.contribution.js
++++ b/node_modules/@opensumi/ide-core-browser/lib/common/common.contribution.js
+@@ -22,8 +22,8 @@ let ClientCommonContribution = class ClientCommonContribution {
+     constructor() {
+         this.schema = core_preferences_1.corePreferenceSchema;
+         const overridePropertiesDefault = {
+-            'application.supportsOpenFolder': !!this.appConfig.isElectronRenderer && !this.appConfig.isRemote,
+-            'application.supportsOpenWorkspace': !!this.appConfig.isElectronRenderer && !this.appConfig.isRemote,
++            'application.supportsOpenFolder': !this.appConfig.isRemote,
++            'application.supportsOpenWorkspace': !this.appConfig.isRemote,
+             'debug.toolbar.top': this.appConfig.isElectronRenderer ? 0 : this.layoutViewSize.menubarHeight,
+         };
+         const keys = Object.keys(this.schema.properties);
+diff --git a/node_modules/@opensumi/ide-core-browser/lib/keybinding/keybinding.js b/node_modules/@opensumi/ide-core-browser/lib/keybinding/keybinding.js
+index ff939d7..b55c3fa 100644
+--- a/node_modules/@opensumi/ide-core-browser/lib/keybinding/keybinding.js
++++ b/node_modules/@opensumi/ide-core-browser/lib/keybinding/keybinding.js
+@@ -8,6 +8,7 @@ const ide_core_common_1 = require("@opensumi/ide-core-common");
+ const context_key_1 = require("../context-key");
+ const keyboard_layout_service_1 = require("../keyboard/keyboard-layout-service");
+ const keys_1 = require("../keyboard/keys");
++const config_provider_1 = require("../react-providers/config-provider");
+ const services_1 = require("../services");
+ var KeybindingScope;
+ (function (KeybindingScope) {
+@@ -658,6 +659,10 @@ let KeybindingRegistryImpl = KeybindingRegistryImpl_1 = class KeybindingRegistry
+             return false;
+         }
+         for (const binding of bindings) {
++            // 在web下electron绑定的浏览器基础快捷键无法使用，这里跳过，直接使用浏览器的快捷键
++            if (!this.appConfig.isElectronRenderer && binding.command.startsWith('electron.')) {
++                continue;
++            }
+             if (this.isEnabled(binding, event)) {
+                 if (this.isPseudoCommand(binding.command)) {
+                     // 让事件冒泡
+@@ -716,6 +721,10 @@ tslib_1.__decorate([
+     (0, di_1.Autowired)(services_1.IStatusBarService),
+     tslib_1.__metadata("design:type", Object)
+ ], KeybindingRegistryImpl.prototype, "statusBar", void 0);
++tslib_1.__decorate([
++    (0, di_1.Autowired)(config_provider_1.AppConfig),
++    tslib_1.__metadata("design:type", Object)
++], KeybindingRegistryImpl.prototype, "appConfig", void 0);
+ KeybindingRegistryImpl = KeybindingRegistryImpl_1 = tslib_1.__decorate([
+     (0, di_1.Injectable)()
+ ], KeybindingRegistryImpl);
+diff --git a/node_modules/@opensumi/ide-core-browser/lib/window/window.service.js b/node_modules/@opensumi/ide-core-browser/lib/window/window.service.js
+index 7b6b1db..76a13c7 100644
+--- a/node_modules/@opensumi/ide-core-browser/lib/window/window.service.js
++++ b/node_modules/@opensumi/ide-core-browser/lib/window/window.service.js
+@@ -5,6 +5,7 @@ const tslib_1 = require("tslib");
+ const di_1 = require("@opensumi/di");
+ const ide_core_common_1 = require("@opensumi/ide-core-common");
+ const electron_1 = require("@opensumi/ide-core-common/lib/electron");
++const logger_1 = require("../logger");
+ const config_provider_1 = require("../react-providers/config-provider");
+ const services_1 = require("../services");
+ const electron_2 = require("../utils/electron");
+@@ -44,7 +45,35 @@ let WindowService = class WindowService {
+             }
+         }
+         else {
+-            throw new Error('Method not implemented.');
++            try {
++                const workspaceUri = new ide_core_common_1.URI(workspace.toString());
++                let workspacePath;
++                if (workspaceUri.scheme === 'file') {
++                    workspacePath = workspaceUri.codeUri.fsPath;
++                }
++                else {
++                    workspacePath = workspaceUri.path.toString();
++                }
++                if (!workspacePath) {
++                    throw new Error('Invalid workspace path');
++                }
++                const url = `${window.location.protocol}//${window.location.host}?workspaceDir=${encodeURIComponent(workspacePath)}`;
++                this.logger.debug(`Opening workspace with URL: ${url}`);
++                if (options.newWindow) {
++                    const newWindow = window.open(url);
++                    if (!newWindow) {
++                        this.logger.error('Failed to open new window');
++                        throw new Error('Unable to open new window, please check if your browser blocks pop-ups');
++                    }
++                }
++                else {
++                    parent.window.location.href = url;
++                }
++            }
++            catch (error) {
++                this.logger.error('Failed to open workspace:', error);
++                throw error;
++            }
+         }
+     }
+     close() {
+@@ -101,6 +130,10 @@ tslib_1.__decorate([
+     (0, di_1.Autowired)(config_provider_1.AppConfig),
+     tslib_1.__metadata("design:type", Object)
+ ], WindowService.prototype, "appConfig", void 0);
++tslib_1.__decorate([
++    (0, di_1.Autowired)(),
++    tslib_1.__metadata("design:type", logger_1.Logger)
++], WindowService.prototype, "logger", void 0);
+ WindowService = tslib_1.__decorate([
+     (0, di_1.Injectable)()
+ ], WindowService);
