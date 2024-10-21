@@ -34,7 +34,7 @@
     "@electron-forge/web-multi-logger": "^7.5.0",
     "@types/debug": "^4",
     "@types/js-yaml": "^4",
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.7.7",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "app-builder-bin": "^4.2.0",
