@@ -3207,6 +3207,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"builder-util-runtime@npm:9.2.10":
+  version: 9.2.10
+  resolution: "builder-util-runtime@npm:9.2.10"
+  dependencies:
+    debug: "npm:^4.3.4"
+    sax: "npm:^1.2.4"
+  checksum: 10/58b96675c174d1f495b4ffd5369fa496f4c33c9ea8150852191c45528bb47a2744142f2e9a449a077304a0f44ce0c35941ebb06b067ad39685c950c26d2137d2
+  languageName: node
+  linkType: hard
+
 "builder-util-runtime@npm:9.2.4":
   version: 9.2.4
   resolution: "builder-util-runtime@npm:9.2.4"
@@ -3214,16 +3224,6 @@ __metadata:
     debug: "npm:^4.3.4"
     sax: "npm:^1.2.4"
   checksum: 10/6b4b6518f8859a90cd6b49ff8053134d731438a588496e5f517ec6d12baef3f1a1c74aaa3142f9d4c61979fca1addc3e47432a956c122cfad582b2145a3df077
-  languageName: node
-  linkType: hard
-
-"builder-util-runtime@npm:9.2.5":
-  version: 9.2.5
-  resolution: "builder-util-runtime@npm:9.2.5"
-  dependencies:
-    debug: "npm:^4.3.4"
-    sax: "npm:^1.2.4"
-  checksum: 10/89c1e67c286ad5dd039abd56af91b3fa3d01eb62ce16c07e8d496a06eb0ed9ce015870d83dd919ffa387a32d47f9080923958672fc993154c8a184c6b1a78adc
   languageName: node
   linkType: hard
 
@@ -3681,7 +3681,7 @@ __metadata:
     css-loader: "npm:7"
     debug: "npm:^4.3.6"
     electron: "npm:30.1.2"
-    electron-updater: "npm:6.3.0"
+    electron-updater: "npm:6.3.9"
     extract-zip: "npm:^2.0.1"
     fast-glob: "npm:^3.3.2"
     glob: "npm:^11.0.0"
@@ -4965,19 +4965,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-updater@npm:6.3.0":
-  version: 6.3.0
-  resolution: "electron-updater@npm:6.3.0"
+"electron-updater@npm:6.3.9":
+  version: 6.3.9
+  resolution: "electron-updater@npm:6.3.9"
   dependencies:
-    builder-util-runtime: "npm:9.2.5"
+    builder-util-runtime: "npm:9.2.10"
     fs-extra: "npm:^10.1.0"
     js-yaml: "npm:^4.1.0"
     lazy-val: "npm:^1.0.5"
     lodash.escaperegexp: "npm:^4.1.2"
     lodash.isequal: "npm:^4.5.0"
-    semver: "npm:^7.3.8"
+    semver: "npm:^7.6.3"
     tiny-typed-emitter: "npm:^2.1.0"
-  checksum: 10/8e18c2098b1995ab82437274c0e9994ec0effae7760719c5460a70f91aea9d642ae3131a3644a0b8f0dfefdbe26d07c91eb74748ac4eb8e2316843d183aed631
+  checksum: 10/98a8a451fde48d6af71ef1e6c09df678feee59444ad296cb6276a01d8a2d0718b6233f884402ba61b736a8d7a16a5df7a86a8cf837ed686f9d3101ab4f34171f
   languageName: node
   linkType: hard
 
@@ -10508,7 +10508,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.1.1, semver@npm:^7.1.3, semver@npm:^7.2.1, semver@npm:^7.3.2, semver@npm:^7.3.4, semver@npm:^7.3.5, semver@npm:^7.3.8, semver@npm:^7.5.2, semver@npm:^7.5.4":
+"semver@npm:^7.1.1, semver@npm:^7.1.3, semver@npm:^7.2.1, semver@npm:^7.3.2, semver@npm:^7.3.4, semver@npm:^7.3.5, semver@npm:^7.3.8, semver@npm:^7.5.2, semver@npm:^7.5.4, semver@npm:^7.6.3":
   version: 7.6.3
   resolution: "semver@npm:7.6.3"
   bin:

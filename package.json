@@ -126,7 +126,7 @@
     "@opensumi/tree-sitter-wasm": "1.1.2",
     "@vscode/spdlog": "^0.15.0",
     "buffer": "^6.0.3",
-    "electron-updater": "6.3.0",
+    "electron-updater": "6.3.9",
     "js-yaml": "^4.1.0",
     "mri": "^1.2.0",
     "process": "^0.11.10",
