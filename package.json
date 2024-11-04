@@ -105,7 +105,7 @@
     "@opensumi/ide-monaco-enhance": "3.4.5",
     "@opensumi/ide-opened-editor": "3.4.5",
     "@opensumi/ide-outline": "3.4.5",
-    "@opensumi/ide-output": "3.4.5",
+    "@opensumi/ide-output": "3.5.0",
     "@opensumi/ide-overlay": "3.4.5",
     "@opensumi/ide-preferences": "3.4.5",
     "@opensumi/ide-process": "3.4.5",
