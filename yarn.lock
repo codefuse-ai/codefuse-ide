@@ -1416,10 +1416,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opensumi/ide-outline@npm:3.4.5":
-  version: 3.4.5
-  resolution: "@opensumi/ide-outline@npm:3.4.5"
-  checksum: 10/325fb67ce092eff58b7fe789375c3b6c8b2dd0c4426c8d6615889651c66caa21c6270c068fd43825fdc75f58419929d3bc1bc31165b14d65648dabd5bb400f71
+"@opensumi/ide-outline@npm:3.5.0":
+  version: 3.5.0
+  resolution: "@opensumi/ide-outline@npm:3.5.0"
+  checksum: 10/3b7aaa818f2d203055ca196b0fd3735612c7e16fd7d649e6a354d775dd2f84b94c6fa7e6c24fd5e3f0428ae4d36ac272f95a81a08e3213643e296ab73772a299
   languageName: node
   linkType: hard
 
@@ -3644,7 +3644,7 @@ __metadata:
     "@opensumi/ide-monaco": "npm:3.4.5"
     "@opensumi/ide-monaco-enhance": "npm:3.4.5"
     "@opensumi/ide-opened-editor": "npm:3.4.5"
-    "@opensumi/ide-outline": "npm:3.4.5"
+    "@opensumi/ide-outline": "npm:3.5.0"
     "@opensumi/ide-output": "npm:3.4.5"
     "@opensumi/ide-overlay": "npm:3.4.5"
     "@opensumi/ide-preferences": "npm:3.4.5"
