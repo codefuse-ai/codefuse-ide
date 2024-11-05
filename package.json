@@ -45,7 +45,7 @@
     "copy-webpack-plugin": "^12.0.2",
     "cross-env": "^7.0.3",
     "css-loader": "7",
-    "debug": "^4.3.6",
+    "debug": "^4.3.7",
     "electron": "30.1.2",
     "extract-zip": "^2.0.1",
     "fast-glob": "^3.3.2",
