@@ -324,7 +324,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/shared-types@npm:7.4.0, @electron-forge/shared-types@npm:^7.4.0":
+"@electron-forge/shared-types@npm:7.4.0":
   version: 7.4.0
   resolution: "@electron-forge/shared-types@npm:7.4.0"
   dependencies:
@@ -336,7 +336,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/shared-types@npm:7.5.0":
+"@electron-forge/shared-types@npm:7.5.0, @electron-forge/shared-types@npm:^7.5.0":
   version: 7.5.0
   resolution: "@electron-forge/shared-types@npm:7.5.0"
   dependencies:
@@ -3655,7 +3655,7 @@ __metadata:
     "@electron-forge/maker-zip": "npm:^7.4.0"
     "@electron-forge/plugin-base": "npm:^7.4.0"
     "@electron-forge/plugin-webpack": "npm:^7.4.0"
-    "@electron-forge/shared-types": "npm:^7.4.0"
+    "@electron-forge/shared-types": "npm:^7.5.0"
     "@electron-forge/web-multi-logger": "npm:^7.5.0"
     "@opensumi/ide-addons": "npm:3.5.0"
     "@opensumi/ide-ai-native": "npm:3.5.0"
