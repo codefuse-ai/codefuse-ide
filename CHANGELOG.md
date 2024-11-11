@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://code.alipay.com/cloud-ide/codefuse-ide/compare/v0.6.4...v0.7.0) (2024-11-11)
+
+
+### Features
+
+* 实现 Code Edits ([#56](https://code.alipay.com/cloud-ide/codefuse-ide/issues/56)) ([cca5fdb](https://code.alipay.com/cloud-ide/codefuse-ide/commit/cca5fdb7fc2432eae3343bb892f019e87b3701b9))
+
+
+### Bug Fixes
+
+* **deps:** update opensumi packages to v3.4.5 ([#47](https://code.alipay.com/cloud-ide/codefuse-ide/issues/47)) ([0b8282f](https://code.alipay.com/cloud-ide/codefuse-ide/commit/0b8282f9ae976c6e772cada05f67b48e2c165c4e))
+* **deps:** update opensumi packages to v3.5.0 ([#49](https://code.alipay.com/cloud-ide/codefuse-ide/issues/49)) ([a5d9c5b](https://code.alipay.com/cloud-ide/codefuse-ide/commit/a5d9c5b244491c18bf057ea6788a181822cb102d))
+
 ### [0.6.4](https://code.alipay.com/cloud-ide/codefuse-ide/compare/v0.6.3...v0.6.4) (2024-10-16)
 
 
