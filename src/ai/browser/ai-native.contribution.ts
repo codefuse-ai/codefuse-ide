@@ -8,11 +8,12 @@ import {
   IAIBackService,
   CancellationToken,
   ChatResponse,
+  ECodeEditsSourceTyping,
 } from '@opensumi/ide-core-common';
 import { ClientAppContribution, Domain, getIcon } from '@opensumi/ide-core-browser';
 import { ComponentContribution, ComponentRegistry } from '@opensumi/ide-core-browser/lib/layout';
-import { AINativeCoreContribution, ERunStrategy, IChatFeatureRegistry, IInlineChatFeatureRegistry, IProblemFixContext, IProblemFixProviderRegistry, IRenameCandidatesProviderRegistry, ITerminalProviderRegistry, TChatSlashCommandSend, TerminalSuggestionReadableStream } from '@opensumi/ide-ai-native/lib/browser/types';
-import { ICodeEditor, MarkdownString, NewSymbolNameTag } from '@opensumi/ide-monaco';
+import { AINativeCoreContribution, ERunStrategy, IChatFeatureRegistry, IInlineChatFeatureRegistry, IIntelligentCompletionsRegistry, IProblemFixContext, IProblemFixProviderRegistry, IRenameCandidatesProviderRegistry, ITerminalProviderRegistry, TChatSlashCommandSend, TerminalSuggestionReadableStream } from '@opensumi/ide-ai-native/lib/browser/types';
+import { ICodeEditor, MarkdownString, NewSymbolNameTag, Range } from '@opensumi/ide-monaco';
 import { MessageService } from '@opensumi/ide-overlay/lib/browser/message.service';
 import { BaseTerminalDetectionLineMatcher, JavaMatcher, MatcherType, NodeMatcher, NPMMatcher, ShellMatcher, TSCMatcher } from '@opensumi/ide-ai-native/lib/browser/contrib/terminal/matcher';
 import { ChatService } from '@opensumi/ide-ai-native/lib/browser/chat/chat.api.service';
@@ -22,12 +23,13 @@ import { listenReadable } from '@opensumi/ide-utils/lib/stream';
 
 import { AI_MENU_BAR_LEFT_ACTION, EInlineOperation } from './constants'
 import { LeftToolbar } from './components/left-toolbar'
-import { explainPrompt, testPrompt, optimizePrompt, detectIntentPrompt, RenamePromptManager, terminalCommandSuggestionPrompt } from './prompt'
+import { explainPrompt, testPrompt, optimizePrompt, detectIntentPrompt, RenamePromptManager, terminalCommandSuggestionPrompt, codeEditsLintErrorPrompt } from './prompt'
 import { CommandRender } from './command/command-render'
 import { AITerminalDebugService } from './ai-terminal-debug.service'
 import { InlineChatOperationModel } from './inline-chat-operation'
 import { AICommandService } from './command/command.service'
 import hiPng from './assets/hi.png'
+import { ILinterErrorData } from '@opensumi/ide-ai-native/lib/browser/contrib/intelligent-completions/source/lint-error.source';
 
 @Domain(ComponentContribution, AINativeCoreContribution)
 export class AINativeContribution implements ComponentContribution, AINativeCoreContribution {
@@ -549,6 +551,49 @@ ${editor.getModel()!.getValueInRange(editRange)}
 
         return controller;
       },
+    });
+  }
+
+  registerIntelligentCompletionFeature(registry: IIntelligentCompletionsRegistry): void {
+    registry.registerCodeEditsProvider(async (editor, _position, bean, token) => {
+      const model = editor.getModel();
+      if (!model) {
+        return;
+      }
+
+      if (bean.typing === ECodeEditsSourceTyping.LinterErrors) {
+        const errors = (bean.data as ILinterErrorData).errors;
+
+        if (errors.length === 0) {
+          return;
+        }
+
+        const lastItem = errors[errors.length - 1];
+        const lastRange = lastItem.range;
+
+        const waringRange = Range.fromPositions(
+          { lineNumber: errors[0].range.startPosition.lineNumber, column: 1 },
+          { lineNumber: lastRange.endPosition.lineNumber, column: model!.getLineMaxColumn(lastRange.endPosition.lineNumber) }
+        );
+
+        const prompt = codeEditsLintErrorPrompt(model.getValueInRange(waringRange), errors);
+        const response = await this.aiBackService.request(prompt, {}, token);
+
+        if (response.data) {
+          const controller = new InlineChatController({ enableCodeblockRender: true });
+          const codeData = controller['calculateCodeBlocks'](response.data);
+
+          return {
+            items: [
+              {
+                insertText: codeData,
+                range: waringRange
+              }
+            ]
+          };
+        }
+      }
+      return undefined;
     });
   }
 }
