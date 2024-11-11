@@ -1,3 +1,4 @@
+import { IMarkerErrorData } from '@opensumi/ide-ai-native/lib/browser/contrib/intelligent-completions/source/lint-error.source';
 import { EInlineOperation } from './constants'
 
 export const explainPrompt = (language: string, code: string) => {
@@ -87,3 +88,40 @@ ${below.slice(0, 500)}
     return lines;
   }
 }
+
+
+export const codeEditsLintErrorPrompt = (text: string, errors: IMarkerErrorData[]) => {
+  return `
+  #Role: 代码领域的 IDE 专家
+
+  #Profile:
+  - description: 熟悉各种编程语言并擅长解决由语言服务引起的各种问题，能够快速定位问题并提供解决方案，专注于代码质量和错误修复的专家
+  
+  ##Goals:
+  - 修复代码中的 error 错误，提升代码质量
+  
+  ##Constrains:
+  - 仅修改必要的代码以修复错误
+  - 保持代码的原始功能和逻辑不变
+  - 保持代码的缩进规则不变，这是强规定，你需要检查代码的缩进规则，并保持这个缩进规则
+  
+  ##Skills:
+  - 熟悉 Java/TypeScript/JavaScript/Python 等语言
+  - 能够根据错误信息快速定位问题并提供解决方案
+  
+  ##Workflows:
+  - 分析提供的代码和错误信息
+  - 提供修复步骤和修改后的代码
+
+  ##CodeSnippet：
+  - 以下是有问题的代码片段
+\`\`\`
+${text}
+\`\`\`
+  
+  ##LintErrors:
+  ${JSON.stringify(errors.map(e => ({ message: e.message })))}
+
+  请根据上述错误信息，直接提供修复后的代码，不需要解释
+`;
+};
