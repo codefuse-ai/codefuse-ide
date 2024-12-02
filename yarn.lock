@@ -1108,6 +1108,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@opensumi/ide-core-common@npm:3.6.0":
+  version: 3.6.0
+  resolution: "@opensumi/ide-core-common@npm:3.6.0"
+  dependencies:
+    "@opensumi/di": "npm:^1.8.0"
+    "@opensumi/events": "npm:^1.0.0"
+    "@opensumi/ide-utils": "npm:3.6.0"
+  checksum: 10/57f5e54262f0d49981cb6daf7966b2cd5177ed5839c66d5ca89d9513d492927e33ab8265053db688d576b55e62f7176f18c4ad2a09e9b2d4c62595caff7f5bf2
+  languageName: node
+  linkType: hard
+
 "@opensumi/ide-core-electron-main@npm:3.5.0":
   version: 3.5.0
   resolution: "@opensumi/ide-core-electron-main@npm:3.5.0"
@@ -1433,12 +1444,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opensumi/ide-output@npm:3.5.0":
-  version: 3.5.0
-  resolution: "@opensumi/ide-output@npm:3.5.0"
+"@opensumi/ide-output@npm:3.6.0":
+  version: 3.6.0
+  resolution: "@opensumi/ide-output@npm:3.6.0"
   dependencies:
-    "@opensumi/ide-core-common": "npm:3.5.0"
-  checksum: 10/78b29be318d12ddf8ed5e829942cc226e3a9264411fb7c36860074c59cae15b345342ff5f0c1466f5ec850ff21ed86e8296163b11ba06c0a3302ad0ba1c617e3
+    "@opensumi/ide-core-common": "npm:3.6.0"
+  checksum: 10/8ba4eb6a88c23ade8bd344a677cb2eebbbb0a5e372cde01780b902ac6a24f9f06574c53e2194abe81642f7f921f9d6e23321b82448dd1e28c2ca70e898d1b33a
   languageName: node
   linkType: hard
 
@@ -1597,6 +1608,19 @@ __metadata:
     nanoid: "npm:3.3.4"
     vscode-uri: "npm:3.0.2"
   checksum: 10/f9b15865df59214abc848021ae733ab4e22bbee163e273316cd48d4e415f0385a9439aadf5e1a76d5fb1c39e4afc0403a22e5a73a0b3332839cad620b3816b38
+  languageName: node
+  linkType: hard
+
+"@opensumi/ide-utils@npm:3.6.0":
+  version: 3.6.0
+  resolution: "@opensumi/ide-utils@npm:3.6.0"
+  dependencies:
+    iconv-lite: "npm:^0.6.3"
+    jschardet: "npm:3.0.0"
+    mri: "npm:^1.2.0"
+    nanoid: "npm:3.3.4"
+    vscode-uri: "npm:3.0.2"
+  checksum: 10/a1fd36070c658ce48b4236c83c709a9db1dee0f75d3ea00778fcaad80932dad8a3dbc5f065026d9e60751669de19d14d52acc37d194ea55302b7af6c62c44e81
   languageName: node
   linkType: hard
 
@@ -3686,7 +3710,7 @@ __metadata:
     "@opensumi/ide-monaco-enhance": "npm:3.5.0"
     "@opensumi/ide-opened-editor": "npm:3.5.0"
     "@opensumi/ide-outline": "npm:3.5.0"
-    "@opensumi/ide-output": "npm:3.5.0"
+    "@opensumi/ide-output": "npm:3.6.0"
     "@opensumi/ide-overlay": "npm:3.5.0"
     "@opensumi/ide-preferences": "npm:3.5.0"
     "@opensumi/ide-process": "npm:3.5.0"
