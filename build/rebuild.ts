@@ -42,5 +42,7 @@ export const rebuild = async (config?: { arch?: string, cwd?: string, silent?: b
 }
 
 if (require.main === module) {
-  rebuild()
+  rebuild({
+    silent: false
+  })
 }

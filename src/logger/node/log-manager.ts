@@ -1,6 +1,7 @@
 import * as path from 'path'
 import { Injectable } from '@opensumi/di';
 import { AbstractLogServiceManager } from '../common'
+import * as process from "node:process";
 
 @Injectable()
 export class LogServiceManager extends AbstractLogServiceManager {
