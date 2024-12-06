@@ -1,10 +1,20 @@
 import { Autowired, Injectable } from "@opensumi/di";
-import { ChatService } from "@opensumi/ide-ai-native/lib/browser/chat/chat.api.service";
 import { InlineChatController } from "@opensumi/ide-ai-native/lib/browser/widget/inline-chat/inline-chat-controller";
-import { AIBackSerivcePath, CancellationToken, ChatServiceToken, IAIBackService } from "@opensumi/ide-core-common";
-import { ICodeEditor } from "@opensumi/ide-monaco";
-import { commentsPrompt, explainPrompt, optimizePrompt, testPrompt } from "./prompt";
-import { EInlineOperation } from './constants';
+import { AIBackSerivcePath, ChatServiceToken } from "@opensumi/ide-core-common";
+
+import { EInlineOperation } from "./constants";
+import {
+  commentsPrompt,
+  explainPrompt,
+  optimizePrompt,
+  testPrompt,
+} from "./prompt";
+import type { ChatService } from "@opensumi/ide-ai-native/lib/browser/chat/chat.api.service";
+import type {
+  CancellationToken,
+  IAIBackService,
+} from "@opensumi/ide-core-common";
+import type { ICodeEditor } from "@opensumi/ide-monaco";
 
 @Injectable()
 export class InlineChatOperationModel {
@@ -13,25 +23,6 @@ export class InlineChatOperationModel {
 
   @Autowired(ChatServiceToken)
   private readonly aiChatService: ChatService;
-
-  private getCrossCode(monacoEditor: ICodeEditor): string {
-    const model = monacoEditor.getModel();
-    if (!model) {
-      return '';
-    }
-
-    const selection = monacoEditor.getSelection();
-
-    if (!selection) {
-      return '';
-    }
-
-    const crossSelection = selection
-      .setStartPosition(selection.startLineNumber, 1)
-      .setEndPosition(selection.endLineNumber, Number.MAX_SAFE_INTEGER);
-    const crossCode = model.getValueInRange(crossSelection);
-    return crossCode;
-  }
 
   public [EInlineOperation.Explain](monacoEditor: ICodeEditor): void {
     const model = monacoEditor.getModel();
@@ -47,11 +38,16 @@ export class InlineChatOperationModel {
     });
   }
 
-  public async [EInlineOperation.Comments](editor: ICodeEditor, token: CancellationToken): Promise<InlineChatController> {
+  public async [EInlineOperation.Comments](
+    editor: ICodeEditor,
+    token: CancellationToken,
+  ): Promise<InlineChatController> {
     const crossCode = this.getCrossCode(editor);
     const prompt = commentsPrompt(crossCode);
 
-    const controller = new InlineChatController({ enableCodeblockRender: true });
+    const controller = new InlineChatController({
+      enableCodeblockRender: true,
+    });
     const stream = await this.aiBackService.requestStream(prompt, {}, token);
     controller.mountReadable(stream);
 
@@ -73,15 +69,38 @@ export class InlineChatOperationModel {
     });
   }
 
-  public async [EInlineOperation.Optimize](editor: ICodeEditor, token: CancellationToken): Promise<InlineChatController> {
+  public async [EInlineOperation.Optimize](
+    editor: ICodeEditor,
+    token: CancellationToken,
+  ): Promise<InlineChatController> {
     const crossCode = this.getCrossCode(editor);
     const prompt = optimizePrompt(crossCode);
 
-    const controller = new InlineChatController({ enableCodeblockRender: true });
+    const controller = new InlineChatController({
+      enableCodeblockRender: true,
+    });
     const stream = await this.aiBackService.requestStream(prompt, {}, token);
     controller.mountReadable(stream);
 
     return controller;
   }
 
+  private getCrossCode(monacoEditor: ICodeEditor): string {
+    const model = monacoEditor.getModel();
+    if (!model) {
+      return "";
+    }
+
+    const selection = monacoEditor.getSelection();
+
+    if (!selection) {
+      return "";
+    }
+
+    const crossSelection = selection
+      .setStartPosition(selection.startLineNumber, 1)
+      .setEndPosition(selection.endLineNumber, Number.MAX_SAFE_INTEGER);
+    const crossCode = model.getValueInRange(crossSelection);
+    return crossCode;
+  }
 }

@@ -1,5 +1,7 @@
 import path from 'node:path';
+
 import { ProvidePlugin } from 'webpack';
+
 import { createConfig, webpackDir } from './webpack.base.config';
 import { asarDeps } from '../deps'
 

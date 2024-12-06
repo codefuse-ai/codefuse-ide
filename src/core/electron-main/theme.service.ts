@@ -1,17 +1,19 @@
-import { nativeTheme } from 'electron';
 import { Injectable, Autowired } from '@opensumi/di';
 import { Domain, isWindows } from '@opensumi/ide-core-common';
+import { IElectronMainApp } from '@opensumi/ide-core-electron-main'
 import {
-  ElectronMainApiRegistry,
   ElectronMainContribution,
   ElectronMainApiProvider,
 } from '@opensumi/ide-core-electron-main/lib/bootstrap/types';
-import { IElectronMainApp } from '@opensumi/ide-core-electron-main'
 import { Color } from '@opensumi/ide-theme/lib/common/color';
+import { nativeTheme } from 'electron';
 
 import { StorageService } from './storage.service'
-import { IThemeService, ThemeData, ThemeType } from '../common/types';
 import { StorageKey } from '../common';
+import type { ThemeData, ThemeType } from '../common/types';
+import { IThemeService } from '../common/types';
+import type {
+  ElectronMainApiRegistry} from '@opensumi/ide-core-electron-main/lib/bootstrap/types';
 
 @Injectable()
 export class ThemeService extends ElectronMainApiProvider implements IThemeService {

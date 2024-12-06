@@ -1,4 +1,5 @@
 import path from 'node:path';
+
 import { createConfig, webpackDir } from './webpack.base.config';
 import { asarDeps } from '../deps'
 

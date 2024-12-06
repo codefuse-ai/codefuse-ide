@@ -1,14 +1,18 @@
-import path from 'path';
+
+import { randomUUID } from 'crypto';
 import fs from 'fs';
 import fsp from 'fs/promises';
-import yauzl, { Entry, ZipFile, Options } from 'yauzl';
 import os from 'os';
+import path from 'path';
 import { pipeline } from 'stream/promises'
-import { ReadableStream } from 'stream/web'
-import { randomUUID } from 'crypto';
 import { promisify } from 'util';
+
 import debug from 'debug'
+import yauzl from 'yauzl';
+
 import { extensions } from './extensions.json'
+import type { ReadableStream } from 'stream/web'
+import type { Entry, ZipFile, Options } from 'yauzl';
 
 const d = debug('download-extension')
 
@@ -17,21 +21,21 @@ const extensionsDir = path.resolve('extensions');
 const parallelRunPromise = (lazyPromises: (() => Promise<void>)[], n: number) => {
   let working = 0;
   let complete = 0;
-  let all = lazyPromises.length;
+  const all = lazyPromises.length;
 
   return new Promise<void>((resolve, reject) => {
     const addWorking = () => {
       while (working < n) {
         const current = lazyPromises.shift();
         if (!current) break
-  
+
         working++;
 
         current()
           .then(() => {
             working--;
             complete++;
-    
+
             if (complete === all) {
               resolve()
               return;
@@ -108,7 +112,7 @@ async function unzipFile(tmpZipFile: string, dist: string, extensionId: string) 
         zipFile.readEntry();
         return;
       }
-      let fileName = entry.fileName.slice(extensionPrefix.length);
+      const fileName = entry.fileName.slice(extensionPrefix.length);
 
       try {
         if (/\/$/.test(fileName)) {
@@ -117,14 +121,14 @@ async function unzipFile(tmpZipFile: string, dist: string, extensionId: string) 
           zipFile.readEntry()
           return;
         }
-  
+
         const dirname = path.dirname(fileName);
         const targetDirName = path.join(extensionDir, dirname);
         if (targetDirName.indexOf(extensionDir) !== 0) {
           throw new Error(`invalid file path ${targetDirName}`)
         }
         await fsp.mkdir(targetDirName, { recursive: true })
-        
+
         const targetFileName = path.join(extensionDir, fileName);
         const readStream = await promisify(zipFile.openReadStream.bind(zipFile))(entry)
         await pipeline(readStream, fs.createWriteStream(targetFileName, { mode: modeFromEntry(entry) }))

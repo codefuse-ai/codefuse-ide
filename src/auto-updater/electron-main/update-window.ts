@@ -1,7 +1,10 @@
-import { BrowserWindow } from 'electron'
+import path from 'node:path'
+
 import { Autowired, Injectable } from '@opensumi/di'
 import { Disposable } from '@opensumi/ide-core-common'
-import path from 'node:path'
+import { BrowserWindow } from 'electron'
+
+
 import { AutoUpdaterService } from './auto-updater.service'
 import { IPC_CHANNEL } from '../common'
 

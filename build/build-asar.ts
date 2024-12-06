@@ -1,8 +1,10 @@
 import { execSync } from 'node:child_process'
-import * as path from 'node:path'
 import * as fs from 'node:fs/promises'
-import { glob } from 'glob'
+import * as path from 'node:path'
+
 import { createPackageWithOptions } from 'asar';
+import { glob } from 'glob'
+
 import { asarDeps } from './deps'
 
 interface Dep {

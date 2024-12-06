@@ -1,8 +1,10 @@
 import * as fs from 'node:fs/promises'
 import * as path from 'path'
+
 import { Injectable, Autowired } from '@opensumi/di';
-import { IEnvironmentService } from '@/core/common'
+
 import { AbstractLogServiceManager } from '../common'
+import { IEnvironmentService } from '@/core/common'
 
 @Injectable()
 export class LogServiceManager extends AbstractLogServiceManager {

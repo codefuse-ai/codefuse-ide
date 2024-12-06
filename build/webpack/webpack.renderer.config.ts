@@ -1,7 +1,9 @@
 import path from 'node:path';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+
 import { createConfig, webpackDir, devServerPort, codeWindowName, updateWindowName } from './webpack.base.config';
 
 const srcDir = path.resolve('src/bootstrap/browser');

@@ -1,13 +1,14 @@
 import '@/core/common/asar'
 import '@/i18n'
-import { app } from 'electron';
 import * as path from 'node:path';
+
 import { URI } from '@opensumi/ide-core-common'
 import { WebviewElectronMainModule } from '@opensumi/ide-webview/lib/electron-main';
-import { ElectronMainApp } from '@/core/electron-main'
-import { CoreElectronMainModule } from '@/core/electron-main';
-import { LoggerModule } from '@/logger/electron-main'
+import { app } from 'electron';
+
 import { AutoUpdaterModule } from '@/auto-updater/electron-main'
+import { ElectronMainApp , CoreElectronMainModule } from '@/core/electron-main'
+import { LoggerModule } from '@/logger/electron-main'
 
 const modules = [
   CoreElectronMainModule,

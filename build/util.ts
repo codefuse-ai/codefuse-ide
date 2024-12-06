@@ -1,4 +1,6 @@
-import { spawn, spawnSync, SpawnOptions } from 'child_process'
+import { spawn, spawnSync } from 'child_process'
+
+import type { SpawnOptions } from 'child_process';
 
 export const exec = async (command: string, args?: string[] | null, options?: SpawnOptions) => {
   await new Promise<void>((resolve, reject) => {

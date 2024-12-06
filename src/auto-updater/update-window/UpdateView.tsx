@@ -1,9 +1,11 @@
+import { marked } from '@opensumi/ide-components/lib/utils';
 import { ipcRenderer, shell } from 'electron'
 import React, { useEffect, useMemo, useState } from 'react'
-import { marked } from '@opensumi/ide-components/lib/utils';
-import logo from '@/core/browser/assets/logo.svg'
+
 import styles from './style.module.less'
-import { IPC_CHANNEL, ProgressInfo, InitialState, UpdateInfo, UpdateState, EventData } from '../common'
+import type { ProgressInfo, InitialState, UpdateInfo, EventData } from '../common';
+import { IPC_CHANNEL, UpdateState } from '../common'
+import logo from '@/core/browser/assets/logo.svg'
 
 export const UpdateView = () => {
   const [ updateInfo, setUpdateInfo ] = useState<UpdateInfo | null | undefined>()

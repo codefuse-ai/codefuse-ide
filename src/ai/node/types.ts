@@ -4,11 +4,12 @@ interface ToolCall {
   function: {
     name: string;
     arguments: string;
-  }
+  };
 }
 
 interface Message {
   role: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
   tool_calls: ToolCall[];
 }
@@ -61,7 +62,7 @@ export interface Completion {
   choices: Array<CompletionChoice>;
   created: number;
   model: string;
-  object: 'text_completion';
+  object: "text_completion";
   system_fingerprint?: string;
   usage?: Usage;
 }

@@ -1,9 +1,15 @@
-import { Provider, ResolvedUpdateFileInfo, UpdateInfo, AppUpdater } from 'electron-updater'
-import yaml from 'js-yaml'
-import type { CustomPublishOptions as BaseCustomPublishOptions } from 'builder-util-runtime'
+import { Provider } from "electron-updater";
+import yaml from "js-yaml";
+
+import type { CustomPublishOptions as BaseCustomPublishOptions } from "builder-util-runtime";
+import type {
+  AppUpdater,
+  ResolvedUpdateFileInfo,
+  UpdateInfo,
+} from "electron-updater";
 
 export interface CustomPublishOptions extends BaseCustomPublishOptions {
-  readonly configUrl: string
+  readonly configUrl: string;
 }
 
 interface AutoUpdateConfig {
@@ -15,89 +21,111 @@ interface AutoUpdateConfig {
 }
 
 const newError = (message: string, code: string) => {
-  const error = new Error(message)
-  ;(error as NodeJS.ErrnoException).code = code;
-  return error
-}
+  const error = new Error(message);
+  (error as NodeJS.ErrnoException).code = code;
+  return error;
+};
 
 export class CustomProvider extends Provider<UpdateInfo> {
   constructor(
     private readonly configuration: CustomPublishOptions,
     private readonly updater: AppUpdater,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     runtimeOptions: any,
   ) {
-    super(runtimeOptions)
+    super(runtimeOptions);
   }
 
   private get channel(): string {
-    const result = this.updater.channel || this.configuration.channel
-    return result == null ? this.getDefaultChannelName() : this.getCustomChannelName(result)
+    const result = this.updater.channel || this.configuration.channel;
+    return result == null
+      ? this.getDefaultChannelName()
+      : this.getCustomChannelName(result);
   }
 
   async getLatestVersion(): Promise<UpdateInfo> {
-    const channelFile = `${this.channel}.yml`
+    const channelFile = `${this.channel}.yml`;
     for (let attemptNumber = 0; ; attemptNumber++) {
       try {
-        const rawData = await this.httpRequest(new URL(this.configuration.configUrl))
+        const rawData = await this.httpRequest(
+          new URL(this.configuration.configUrl),
+        );
         if (!rawData) {
-          throw newError(`Cannot get config data in the latest release config (${this.configuration.configUrl}): rawData: null`, 'ERR_UPDATER_INVALID_UPDATE_INFO')
+          throw newError(
+            `Cannot get config data in the latest release config (${this.configuration.configUrl}): rawData: null`,
+            "ERR_UPDATER_INVALID_UPDATE_INFO",
+          );
         }
-        let config: AutoUpdateConfig[]
+        let config: AutoUpdateConfig[];
         try {
-          config = JSON.parse(rawData)
+          config = JSON.parse(rawData);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           throw newError(
             `Cannot parse update info in the latest release config (${this.configuration.configUrl}): ${err.stack || err.message}, rawData: ${rawData}`,
-            'ERR_UPDATER_INVALID_UPDATE_INFO'
-          )
+            "ERR_UPDATER_INVALID_UPDATE_INFO",
+          );
         }
-        const channelConfig = config.find(item => item.channel === this.channel)
+        const channelConfig = config.find(
+          (item) => item.channel === this.channel,
+        );
         if (!channelConfig) {
           throw newError(
             `Cannot find chanel update info in the latest release config (${this.configuration.configUrl}), rawData: ${rawData}`,
-            'ERR_UPDATER_INVALID_UPDATE_INFO'
-          )
+            "ERR_UPDATER_INVALID_UPDATE_INFO",
+          );
         }
         const { channelUrl, stagingPercentage, releaseNote } = channelConfig;
-        const channelRawData = await this.httpRequest(new URL(channelUrl))
+        const channelRawData = await this.httpRequest(new URL(channelUrl));
         if (!channelRawData) {
-          throw newError(`Cannot get channel data in latest release channel (${channelUrl}): rawData: null`, 'ERR_UPDATER_INVALID_UPDATE_INFO')
+          throw newError(
+            `Cannot get channel data in latest release channel (${channelUrl}): rawData: null`,
+            "ERR_UPDATER_INVALID_UPDATE_INFO",
+          );
         }
-        let updateInfo: UpdateInfo
+        let updateInfo: UpdateInfo;
         try {
-          updateInfo = yaml.load(channelRawData) as UpdateInfo
+          updateInfo = yaml.load(channelRawData) as UpdateInfo;
           Object.assign(updateInfo, {
             stagingPercentage,
             releaseNotes: releaseNote,
-          })
+          });
         } catch (err) {
-          throw newError(`Cannot prase update info in latest release channel (${channelUrl}): rawData: ${channelRawData}`, 'ERR_UPDATER_INVALID_UPDATE_INFO')
+          throw newError(
+            `Cannot prase update info in latest release channel (${channelUrl}): rawData: ${channelRawData}`,
+            "ERR_UPDATER_INVALID_UPDATE_INFO",
+          );
         }
-        return updateInfo
+        return updateInfo;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        if ('statusCode' in e && e.statusCode === 404) {
-          throw newError(`Cannot find channel "${channelFile}" update info: ${e.stack || e.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND")
+        if ("statusCode" in e && e.statusCode === 404) {
+          throw newError(
+            `Cannot find channel "${channelFile}" update info: ${e.stack || e.message}`,
+            "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND",
+          );
         } else if (e.code === "ECONNREFUSED") {
           if (attemptNumber < 3) {
             await new Promise((resolve, reject) => {
               try {
-                setTimeout(resolve, 1000 * attemptNumber)
+                setTimeout(resolve, 1000 * attemptNumber);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } catch (e: any) {
-                reject(e)
+                reject(e);
               }
-            })
-            continue
+            });
+            continue;
           }
         }
-        throw e
+        throw e;
       }
     }
   }
 
   resolveFiles(updateInfo: UpdateInfo): Array<ResolvedUpdateFileInfo> {
-    return updateInfo.files.map(info => ({
+    return updateInfo.files.map((info) => ({
       url: new URL(info.url),
       info,
-    }))
+    }));
   }
 }

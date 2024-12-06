@@ -1,9 +1,12 @@
-import { Injectable } from '@opensumi/di';
-import { ITerminalLaunchError } from '@opensumi/ide-terminal-next';
-import { PtyService } from '@opensumi/ide-terminal-next/lib/node/pty';
-import { getShellPath } from '@opensumi/ide-core-node/lib/bootstrap/shell-path';
+import { Injectable } from "@opensumi/di";
+import { getShellPath } from "@opensumi/ide-core-node/lib/bootstrap/shell-path";
+import { PtyService } from "@opensumi/ide-terminal-next/lib/node/pty";
 
-import { bashIntegrationPath, initShellIntegrationFile } from './shell-integration';
+import {
+  bashIntegrationPath,
+  initShellIntegrationFile,
+} from "./shell-integration";
+import type { ITerminalLaunchError } from "@opensumi/ide-terminal-next";
 
 @Injectable({ multiple: true })
 export class AIPtyService extends PtyService {
@@ -23,22 +26,27 @@ export class AIPtyService extends PtyService {
       };
     }
 
-    if (shellLaunchConfig.executable?.includes('bash')) {
+    if (shellLaunchConfig.executable?.includes("bash")) {
       await initShellIntegrationFile();
-      if (!shellLaunchConfig.args) { shellLaunchConfig.args = []; }
+      if (!shellLaunchConfig.args) {
+        shellLaunchConfig.args = [];
+      }
       if (Array.isArray(shellLaunchConfig.args)) {
-        shellLaunchConfig.args.push('--init-file', bashIntegrationPath);
+        shellLaunchConfig.args.push("--init-file", bashIntegrationPath);
       }
     }
 
-    this._ptyOptions['env'] = ptyEnv;
+    this._ptyOptions["env"] = ptyEnv;
 
     try {
       await this.setupPtyProcess();
       return undefined;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      this.logger.error('IPty#spawn native exception', err);
-      return { message: `A native exception occurred during launch (${err.message})` };
+      this.logger.error("IPty#spawn native exception", err);
+      return {
+        message: `A native exception occurred during launch (${err.message})`,
+      };
     }
   }
 }

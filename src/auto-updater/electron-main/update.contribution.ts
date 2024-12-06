@@ -1,10 +1,13 @@
 import { Autowired } from '@opensumi/di'
-import { Domain, MaybePromise } from '@opensumi/ide-core-common'
-import { ElectronMainApiRegistry } from '@opensumi/ide-core-electron-main'
-import { ElectronMainContribution} from '@/core/electron-main'
-import { UpdateMainService } from './update.service'
+import { Domain } from '@opensumi/ide-core-common'
+
+
 import { UpdateWindow } from './update-window'
+import { UpdateMainService } from './update.service'
 import { IUpdateMainService } from '../common'
+import { ElectronMainContribution} from '@/core/electron-main'
+import type { MaybePromise } from '@opensumi/ide-core-common';
+import type { ElectronMainApiRegistry } from '@opensumi/ide-core-electron-main'
 
 @Domain(ElectronMainContribution)
 export class UpdateContribution implements ElectronMainContribution {

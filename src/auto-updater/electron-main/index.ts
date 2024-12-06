@@ -1,9 +1,11 @@
-import { Injectable, Provider } from '@opensumi/di';
+import { Injectable } from '@opensumi/di';
 import { ElectronMainModule } from '@opensumi/ide-core-electron-main/lib/electron-main-module';
+
+import { AutoUpdaterService } from './auto-updater.service'
+import { UpdateWindow } from './update-window';
 import { UpdateContribution } from './update.contribution'
 import { UpdateMainService } from './update.service'
-import { UpdateWindow } from './update-window';
-import { AutoUpdaterService } from './auto-updater.service'
+import type { Provider } from '@opensumi/di';
 
 
 @Injectable()

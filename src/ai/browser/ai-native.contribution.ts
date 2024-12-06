@@ -1,57 +1,88 @@
-import { Autowired } from '@opensumi/di';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Autowired } from "@opensumi/di";
+import {
+  JavaMatcher,
+  MatcherType,
+  NodeMatcher,
+  NPMMatcher,
+  ShellMatcher,
+  TSCMatcher,
+} from "@opensumi/ide-ai-native/lib/browser/contrib/terminal/matcher";
+import {
+  AINativeCoreContribution,
+  ERunStrategy,
+  TerminalSuggestionReadableStream,
+} from "@opensumi/ide-ai-native/lib/browser/types";
+import { InlineChatController } from "@opensumi/ide-ai-native/lib/browser/widget/inline-chat/inline-chat-controller";
+import { Domain, getIcon } from "@opensumi/ide-core-browser";
+import { ComponentContribution } from "@opensumi/ide-core-browser/lib/layout";
 import {
   AIBackSerivcePath,
   ChatServiceToken,
+  ECodeEditsSourceTyping,
   getDebugLogger,
-  IChatContent,
-  IChatProgress,
-  IAIBackService,
+} from "@opensumi/ide-core-common";
+import { MarkdownString, NewSymbolNameTag, Range } from "@opensumi/ide-monaco";
+import { MessageService } from "@opensumi/ide-overlay/lib/browser/message.service";
+import { listenReadable } from "@opensumi/ide-utils/lib/stream";
+
+import { AITerminalDebugService } from "./ai-terminal-debug.service";
+import hiPng from "./assets/hi.png";
+import { CommandRender } from "./command/command-render";
+import { AICommandService } from "./command/command.service";
+import { LeftToolbar } from "./components/left-toolbar";
+import { AI_MENU_BAR_LEFT_ACTION, EInlineOperation } from "./constants";
+import { InlineChatOperationModel } from "./inline-chat-operation";
+import {
+  codeEditsLintErrorPrompt,
+  detectIntentPrompt,
+  explainPrompt,
+  optimizePrompt,
+  RenamePromptManager,
+  terminalCommandSuggestionPrompt,
+  testPrompt,
+} from "./prompt";
+import type { ChatService } from "@opensumi/ide-ai-native/lib/browser/chat/chat.api.service";
+import type { ILinterErrorData } from "@opensumi/ide-ai-native/lib/browser/contrib/intelligent-completions/source/lint-error.source";
+import type { BaseTerminalDetectionLineMatcher } from "@opensumi/ide-ai-native/lib/browser/contrib/terminal/matcher";
+import type {
+  IChatFeatureRegistry,
+  IInlineChatFeatureRegistry,
+  IIntelligentCompletionsRegistry,
+  IProblemFixContext,
+  IProblemFixProviderRegistry,
+  IRenameCandidatesProviderRegistry,
+  ITerminalProviderRegistry,
+  TChatSlashCommandSend,
+} from "@opensumi/ide-ai-native/lib/browser/types";
+import type { ITerminalCommandSuggestionDesc } from "@opensumi/ide-ai-native/lib/common";
+import type { ComponentRegistry } from "@opensumi/ide-core-browser/lib/layout";
+import type {
   CancellationToken,
   ChatResponse,
-  ECodeEditsSourceTyping,
-} from '@opensumi/ide-core-common';
-import { ClientAppContribution, Domain, getIcon } from '@opensumi/ide-core-browser';
-import { ComponentContribution, ComponentRegistry } from '@opensumi/ide-core-browser/lib/layout';
-import { AINativeCoreContribution, ERunStrategy, IChatFeatureRegistry, IInlineChatFeatureRegistry, IIntelligentCompletionsRegistry, IProblemFixContext, IProblemFixProviderRegistry, IRenameCandidatesProviderRegistry, ITerminalProviderRegistry, TChatSlashCommandSend, TerminalSuggestionReadableStream } from '@opensumi/ide-ai-native/lib/browser/types';
-import { ICodeEditor, MarkdownString, NewSymbolNameTag, Range } from '@opensumi/ide-monaco';
-import { MessageService } from '@opensumi/ide-overlay/lib/browser/message.service';
-import { BaseTerminalDetectionLineMatcher, JavaMatcher, MatcherType, NodeMatcher, NPMMatcher, ShellMatcher, TSCMatcher } from '@opensumi/ide-ai-native/lib/browser/contrib/terminal/matcher';
-import { ChatService } from '@opensumi/ide-ai-native/lib/browser/chat/chat.api.service';
-import { InlineChatController } from '@opensumi/ide-ai-native/lib/browser/widget/inline-chat/inline-chat-controller';
-import { ITerminalCommandSuggestionDesc } from '@opensumi/ide-ai-native/lib/common';
-import { listenReadable } from '@opensumi/ide-utils/lib/stream';
-
-import { AI_MENU_BAR_LEFT_ACTION, EInlineOperation } from './constants'
-import { LeftToolbar } from './components/left-toolbar'
-import { explainPrompt, testPrompt, optimizePrompt, detectIntentPrompt, RenamePromptManager, terminalCommandSuggestionPrompt, codeEditsLintErrorPrompt } from './prompt'
-import { CommandRender } from './command/command-render'
-import { AITerminalDebugService } from './ai-terminal-debug.service'
-import { InlineChatOperationModel } from './inline-chat-operation'
-import { AICommandService } from './command/command.service'
-import hiPng from './assets/hi.png'
-import { ILinterErrorData } from '@opensumi/ide-ai-native/lib/browser/contrib/intelligent-completions/source/lint-error.source';
+  IAIBackService,
+  IChatContent,
+  IChatProgress,
+} from "@opensumi/ide-core-common";
+import type { ICodeEditor } from "@opensumi/ide-monaco";
 
 @Domain(ComponentContribution, AINativeCoreContribution)
-export class AINativeContribution implements ComponentContribution, AINativeCoreContribution {
-  @Autowired(MessageService)
-  protected readonly messageService: MessageService;
-
-  @Autowired(AITerminalDebugService)
-  protected readonly terminalDebugService: AITerminalDebugService;
-
-  @Autowired(ChatServiceToken)
-  private readonly chatService: ChatService;
-
+export class AINativeContribution
+  implements ComponentContribution, AINativeCoreContribution
+{
   @Autowired(InlineChatOperationModel)
   inlineChatOperationModel: InlineChatOperationModel;
-
-  @Autowired(AIBackSerivcePath)
-  private aiBackService: IAIBackService;
-
   @Autowired(AICommandService)
   aiCommandService: AICommandService;
-
   logger = getDebugLogger();
+  @Autowired(MessageService)
+  protected readonly messageService: MessageService;
+  @Autowired(AITerminalDebugService)
+  protected readonly terminalDebugService: AITerminalDebugService;
+  @Autowired(ChatServiceToken)
+  private readonly chatService: ChatService;
+  @Autowired(AIBackSerivcePath)
+  private aiBackService: IAIBackService;
 
   registerComponent(registry: ComponentRegistry): void {
     registry.register(AI_MENU_BAR_LEFT_ACTION, {
@@ -66,16 +97,20 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       嗨，我是您的专属 AI 小助手，我在这里回答有关代码的问题，并帮助您思考</br>您可以提问我一些关于代码的问题`),
       [
         {
-          icon: getIcon('send-hollow'),
-          title: '生成 Java 快速排序算法',
-          message: '生成 Java 快速排序算法',
+          icon: getIcon("send-hollow"),
+          title: "生成 Java 快速排序算法",
+          message: "生成 Java 快速排序算法",
         },
       ],
     );
 
-    const interceptExecute = (value: string, slash: string, editor?: ICodeEditor): string => {
+    const interceptExecute = (
+      value: string,
+      slash: string,
+      editor?: ICodeEditor,
+    ): string => {
       if (!editor) {
-        return '';
+        return "";
       }
       const model = editor.getModel();
 
@@ -85,15 +120,19 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
         selectCode = model!.getValueInRange(selection);
       }
 
-      const parseValue = value.replace(slash, '');
+      const parseValue = value.replace(slash, "");
 
       if (!parseValue.trim()) {
         if (!selectCode) {
-          this.messageService.info('很抱歉，您并未选中或输入任何代码，请先选中或输入代码');
-          return '';
+          this.messageService.info(
+            "很抱歉，您并未选中或输入任何代码，请先选中或输入代码",
+          );
+          return "";
         }
 
-        return value + `\n\`\`\`${model?.getLanguageId()}\n${selectCode}\n\`\`\``;
+        return (
+          value + `\n\`\`\`${model?.getLanguageId()}\n${selectCode}\n\`\`\``
+        );
       }
 
       return value;
@@ -101,25 +140,29 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
 
     registry.registerSlashCommand(
       {
-        name: 'Explain',
-        description: '解释代码',
+        name: "Explain",
+        description: "解释代码",
         isShortcut: true,
-        tooltip: '解释代码',
+        tooltip: "解释代码",
       },
       {
         providerInputPlaceholder(_value, _editor) {
-          return '请输入或者粘贴代码';
+          return "请输入或者粘贴代码";
         },
         providerPrompt(value: string, editor?: ICodeEditor) {
           if (!editor) {
             return value;
           }
-          const parseValue = value.replace('/Explain', '');
+          const parseValue = value.replace("/Explain", "");
           const model = editor.getModel();
-          return explainPrompt(model?.getLanguageId() || '', parseValue);
+          return explainPrompt(model?.getLanguageId() || "", parseValue);
         },
-        execute: (value: string, send: TChatSlashCommandSend, editor?: ICodeEditor) => {
-          const parseValue = interceptExecute(value, '/Explain', editor);
+        execute: (
+          value: string,
+          send: TChatSlashCommandSend,
+          editor?: ICodeEditor,
+        ) => {
+          const parseValue = interceptExecute(value, "/Explain", editor);
 
           if (!parseValue) {
             return;
@@ -132,24 +175,28 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
 
     registry.registerSlashCommand(
       {
-        name: 'Test',
-        description: '生成单测',
+        name: "Test",
+        description: "生成单测",
         isShortcut: true,
-        tooltip: '生成单测'
+        tooltip: "生成单测",
       },
       {
         providerInputPlaceholder(_value, _editor) {
-          return '请输入或者粘贴代码';
+          return "请输入或者粘贴代码";
         },
         providerPrompt(value: string, editor?: ICodeEditor) {
           if (!editor) {
             return value;
           }
-          const parseValue = value.replace('/Text', '');
+          const parseValue = value.replace("/Text", "");
           return testPrompt(parseValue);
         },
-        execute: (value: string, send: TChatSlashCommandSend, editor?: ICodeEditor) => {
-          const parseValue = interceptExecute(value, '/Text', editor);
+        execute: (
+          value: string,
+          send: TChatSlashCommandSend,
+          editor?: ICodeEditor,
+        ) => {
+          const parseValue = interceptExecute(value, "/Text", editor);
 
           if (!parseValue) {
             return;
@@ -162,24 +209,28 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
 
     registry.registerSlashCommand(
       {
-        name: 'Optimize',
-        description: '优化代码',
+        name: "Optimize",
+        description: "优化代码",
         isShortcut: true,
-        tooltip: '优化代码'
+        tooltip: "优化代码",
       },
       {
         providerInputPlaceholder(_value, _editor) {
-          return '请输入或者粘贴代码';
+          return "请输入或者粘贴代码";
         },
         providerPrompt(value: string, editor?: ICodeEditor) {
           if (!editor) {
             return value;
           }
-          const parseValue = value.replace('/Optimize', '');
+          const parseValue = value.replace("/Optimize", "");
           return optimizePrompt(parseValue);
         },
-        execute: (value: string, send: TChatSlashCommandSend, editor?: ICodeEditor) => {
-          const parseValue = interceptExecute(value, '/Optimize', editor);
+        execute: (
+          value: string,
+          send: TChatSlashCommandSend,
+          editor?: ICodeEditor,
+        ) => {
+          const parseValue = interceptExecute(value, "/Optimize", editor);
 
           if (!parseValue) {
             return;
@@ -192,19 +243,19 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
 
     registry.registerSlashCommand(
       {
-        name: 'IDE',
-        description: '执行 IDE 相关命令',
+        name: "IDE",
+        description: "执行 IDE 相关命令",
       },
       {
         providerInputPlaceholder(_value, _editor) {
-          return '可以问我任何问题，或键入主题 \"/\"';
+          return '可以问我任何问题，或键入主题 "/"';
         },
         providerRender: CommandRender,
         execute: (value: string, send: TChatSlashCommandSend) => {
-          const parseValue = value.replace('/IDE', '');
+          const parseValue = value.replace("/IDE", "");
 
           if (!parseValue) {
-            this.messageService.warning('请输入要执行的 IDE 命令');
+            this.messageService.warning("请输入要执行的 IDE 命令");
             return;
           }
 
@@ -217,23 +268,25 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
   registerInlineChatFeature(registry: IInlineChatFeatureRegistry) {
     registry.registerTerminalInlineChat(
       {
-        id: 'terminal-explain',
-        name: 'Explain',
-        title: '解释选中的内容'
+        id: "terminal-explain",
+        name: "Explain",
+        title: "解释选中的内容",
       },
       {
-        triggerRules: 'selection',
+        triggerRules: "selection",
         execute: async (stdout: string) => {
-          const { message, prompt } = await this.terminalDebugService.generatePrompt({
-            type: MatcherType.base,
-            errorText: stdout,
-            operate: 'explain'
-          });
+          const { message, prompt } =
+            await this.terminalDebugService.generatePrompt({
+              type: MatcherType.base,
+              errorText: stdout,
+              operate: "explain",
+            });
 
           this.chatService.sendMessage({
             message,
             prompt,
-            reportType: 'terminal-selection-explain' as any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            reportType: "terminal-selection-explain" as any,
           });
         },
       },
@@ -241,9 +294,9 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
 
     registry.registerTerminalInlineChat(
       {
-        id: 'terminal-debug',
-        name: 'debug',
-        title: '分析选中内容'
+        id: "terminal-debug",
+        name: "debug",
+        title: "分析选中内容",
       },
       {
         triggerRules: [
@@ -253,17 +306,23 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
           ShellMatcher,
           JavaMatcher,
         ],
-        execute: async (stdout: string, _stdin: string, rule?: BaseTerminalDetectionLineMatcher) => {
-          const { message, prompt } = await this.terminalDebugService.generatePrompt({
-            type: rule!.type,
-            errorText: stdout,
-            operate: 'debug'
-          });
+        execute: async (
+          stdout: string,
+          _stdin: string,
+          rule?: BaseTerminalDetectionLineMatcher,
+        ) => {
+          const { message, prompt } =
+            await this.terminalDebugService.generatePrompt({
+              type: rule!.type,
+              errorText: stdout,
+              operate: "debug",
+            });
 
           this.chatService.sendMessage({
             message,
             prompt,
-            reportType: 'terminal-explain' as any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            reportType: "terminal-explain" as any,
           });
         },
       },
@@ -273,14 +332,15 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       {
         id: `ai-${EInlineOperation.Explain}`,
         name: EInlineOperation.Explain,
-        title: '解释代码',
-        renderType: 'button',
+        title: "解释代码",
+        renderType: "button",
         codeAction: {
           isPreferred: true,
         },
       },
       {
-        execute: (editor: ICodeEditor) => this.inlineChatOperationModel.Explain(editor)
+        execute: (editor: ICodeEditor) =>
+          this.inlineChatOperationModel.Explain(editor),
       },
     );
 
@@ -288,15 +348,16 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       {
         id: `ai-${EInlineOperation.Comments}`,
         name: EInlineOperation.Comments,
-        title: '添加注释',
-        renderType: 'button',
+        title: "添加注释",
+        renderType: "button",
         codeAction: {
           isPreferred: true,
-          kind: 'refactor.rewrite',
+          kind: "refactor.rewrite",
         },
       },
       {
-        providerDiffPreviewStrategy: (...args) => this.inlineChatOperationModel.Comments(...args),
+        providerDiffPreviewStrategy: (...args) =>
+          this.inlineChatOperationModel.Comments(...args),
       },
     );
 
@@ -304,14 +365,15 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       {
         id: `ai-${EInlineOperation.Test}`,
         name: EInlineOperation.Test,
-        title: '生成单测',
-        renderType: 'button',
+        title: "生成单测",
+        renderType: "button",
         codeAction: {
           isPreferred: true,
         },
       },
       {
-        execute: (editor: ICodeEditor) => this.inlineChatOperationModel.Test(editor),
+        execute: (editor: ICodeEditor) =>
+          this.inlineChatOperationModel.Test(editor),
       },
     );
 
@@ -319,14 +381,15 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       {
         id: `ai-${EInlineOperation.Optimize}`,
         name: EInlineOperation.Optimize,
-        renderType: 'dropdown',
+        renderType: "dropdown",
         codeAction: {
           isPreferred: true,
-          kind: 'refactor.rewrite',
+          kind: "refactor.rewrite",
         },
       },
       {
-        providerDiffPreviewStrategy: (...args) => this.inlineChatOperationModel.Optimize(...args),
+        providerDiffPreviewStrategy: (...args) =>
+          this.inlineChatOperationModel.Optimize(...args),
       },
     );
 
@@ -336,7 +399,10 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
     registry.registerInteractiveInput(
       {
         handleStrategy: async (_editor, value) => {
-          const result = await this.aiBackService.request(detectIntentPrompt(value), {});
+          const result = await this.aiBackService.request(
+            detectIntentPrompt(value),
+            {},
+          );
 
           let operation: string = result.data as EInlineOperation;
 
@@ -345,8 +411,8 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
             return ERunStrategy.PREVIEW;
           }
 
-          if (operation[0] === '[' && operation[operation.length - 1] === ']') {
-            operation = operation.slice(1, -1)
+          if (operation[0] === "[" && operation[operation.length - 1] === "]") {
+            operation = operation.slice(1, -1);
           }
 
           if (
@@ -383,13 +449,19 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
             prompt += `：\n\`\`\`${model!.getLanguageId()}\n${crossCode}\n\`\`\``;
           }
 
-          const controller = new InlineChatController({ enableCodeblockRender: true });
-          const stream = await this.aiBackService.requestStream(prompt, {}, token);
+          const controller = new InlineChatController({
+            enableCodeblockRender: true,
+          });
+          const stream = await this.aiBackService.requestStream(
+            prompt,
+            {},
+            token,
+          );
           controller.mountReadable(stream);
 
           return controller;
         },
-      }
+      },
     );
   }
 
@@ -409,19 +481,24 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
         endColumn: Number.MAX_SAFE_INTEGER,
       });
 
-      const prompt = RenamePromptManager.requestPrompt(model.getLanguageId(), varName, above, below);
+      const prompt = RenamePromptManager.requestPrompt(
+        model.getLanguageId(),
+        varName,
+        above,
+        below,
+      );
 
-      this.logger.info('rename prompt', prompt);
+      this.logger.info("rename prompt", prompt);
 
       const result = await this.aiBackService.request(
         prompt,
         {
-          type: 'rename',
+          type: "rename",
         },
         token,
       );
 
-      this.logger.info('rename result', result);
+      this.logger.info("rename result", result);
 
       if (result.data) {
         const names = RenamePromptManager.extractResponse(result.data);
@@ -434,31 +511,15 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
     });
   }
 
-  private getCrossCode(monacoEditor: ICodeEditor): string {
-    const model = monacoEditor.getModel();
-    if (!model) {
-      return '';
-    }
-
-    const selection = monacoEditor.getSelection();
-
-    if (!selection) {
-      return '';
-    }
-
-    const crossSelection = selection
-      .setStartPosition(selection.startLineNumber, 1)
-      .setEndPosition(selection.endLineNumber, Number.MAX_SAFE_INTEGER);
-    const crossCode = model.getValueInRange(crossSelection);
-    return crossCode;
-  }
-
   registerTerminalProvider(register: ITerminalProviderRegistry): void {
     let aiCommandSuggestions: ITerminalCommandSuggestionDesc[] = [];
     let currentObj = {} as ITerminalCommandSuggestionDesc;
 
-    const processLine = (lineBuffer: string, stream: TerminalSuggestionReadableStream) => {
-      const firstCommandIndex = lineBuffer.indexOf('#Command#:');
+    const processLine = (
+      lineBuffer: string,
+      stream: TerminalSuggestionReadableStream,
+    ) => {
+      const firstCommandIndex = lineBuffer.indexOf("#Command#:");
       let line = lineBuffer;
 
       if (firstCommandIndex !== -1) {
@@ -467,20 +528,20 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       }
 
       // 解析命令和描述
-      if (line.startsWith('#Command#:')) {
+      if (line.startsWith("#Command#:")) {
         if (currentObj.command) {
           // 如果currentObj中已有命令，则将其添加到结果数组中，并开始新的对象
           currentObj = {} as ITerminalCommandSuggestionDesc;
         }
-        currentObj.command = line.substring('#Command#:'.length).trim();
-      } else if (line.startsWith('#Description#:')) {
-        currentObj.description = line.substring('#Description#:'.length).trim();
+        currentObj.command = line.substring("#Command#:".length).trim();
+      } else if (line.startsWith("#Description#:")) {
+        currentObj.description = line.substring("#Description#:".length).trim();
         aiCommandSuggestions.push(currentObj);
         if (aiCommandSuggestions.length > 4) {
           // 如果 AI 返回的命令超过 5 个，就停止 AI 生成 (这种情况下往往是模型不稳定或者出现了幻觉)
           stream.end();
         }
-        stream.emitData(currentObj);// 每拿到一个结果就回调一次，优化用户体感
+        stream.emitData(currentObj); // 每拿到一个结果就回调一次，优化用户体感
       }
     };
 
@@ -488,32 +549,36 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       const prompt = terminalCommandSuggestionPrompt(message);
 
       aiCommandSuggestions = [];
-      const backStream = await this.aiBackService.requestStream(prompt, {}, token);
+      const backStream = await this.aiBackService.requestStream(
+        prompt,
+        {},
+        token,
+      );
       const stream = TerminalSuggestionReadableStream.create();
 
-      let buffer = '';
+      let buffer = "";
 
       listenReadable<IChatProgress>(backStream, {
         onData: (data) => {
           const { content } = data as IChatContent;
 
           buffer += content;
-          let newlineIndex = buffer.indexOf('\n');
+          let newlineIndex = buffer.indexOf("\n");
           while (newlineIndex !== -1) {
             const line = buffer.substring(0, newlineIndex).trim();
             buffer = buffer.substring(newlineIndex + 1);
             processLine(line, stream);
-            newlineIndex = buffer.indexOf('\n');
+            newlineIndex = buffer.indexOf("\n");
           }
         },
         onEnd: () => {
-          buffer += '\n';
-          let newlineIndex = buffer.indexOf('\n');
+          buffer += "\n";
+          let newlineIndex = buffer.indexOf("\n");
           while (newlineIndex !== -1) {
             const line = buffer.substring(0, newlineIndex).trim();
             buffer = buffer.substring(newlineIndex + 1);
             processLine(line, stream);
-            newlineIndex = buffer.indexOf('\n');
+            newlineIndex = buffer.indexOf("\n");
           }
           stream.end();
         },
@@ -522,7 +587,6 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       return stream;
     });
   }
-
 
   registerProblemFixFeature(registry: IProblemFixProviderRegistry): void {
     registry.registerHoverFixProvider({
@@ -545,8 +609,14 @@ ${editor.getModel()!.getValueInRange(editRange)}
         请根据 lint error 信息修复代码！
         不需要任何解释，只要返回修复后的代码块内容`;
 
-        const controller = new InlineChatController({ enableCodeblockRender: true });
-        const stream = await this.aiBackService.requestStream(prompt, {}, token);
+        const controller = new InlineChatController({
+          enableCodeblockRender: true,
+        });
+        const stream = await this.aiBackService.requestStream(
+          prompt,
+          {},
+          token,
+        );
         controller.mountReadable(stream);
 
         return controller;
@@ -554,46 +624,77 @@ ${editor.getModel()!.getValueInRange(editRange)}
     });
   }
 
-  registerIntelligentCompletionFeature(registry: IIntelligentCompletionsRegistry): void {
-    registry.registerCodeEditsProvider(async (editor, _position, bean, token) => {
-      const model = editor.getModel();
-      if (!model) {
-        return;
-      }
-
-      if (bean.typing === ECodeEditsSourceTyping.LinterErrors) {
-        const errors = (bean.data as ILinterErrorData).errors;
-
-        if (errors.length === 0) {
+  registerIntelligentCompletionFeature(
+    registry: IIntelligentCompletionsRegistry,
+  ): void {
+    registry.registerCodeEditsProvider(
+      async (editor, _position, bean, token) => {
+        const model = editor.getModel();
+        if (!model) {
           return;
         }
 
-        const lastItem = errors[errors.length - 1];
-        const lastRange = lastItem.range;
+        if (bean.typing === ECodeEditsSourceTyping.LinterErrors) {
+          const errors = (bean.data as ILinterErrorData).errors;
 
-        const waringRange = Range.fromPositions(
-          { lineNumber: errors[0].range.startPosition.lineNumber, column: 1 },
-          { lineNumber: lastRange.endPosition.lineNumber, column: model!.getLineMaxColumn(lastRange.endPosition.lineNumber) }
-        );
+          if (errors.length === 0) {
+            return;
+          }
 
-        const prompt = codeEditsLintErrorPrompt(model.getValueInRange(waringRange), errors);
-        const response = await this.aiBackService.request(prompt, {}, token);
+          const lastItem = errors[errors.length - 1];
+          const lastRange = lastItem.range;
 
-        if (response.data) {
-          const controller = new InlineChatController({ enableCodeblockRender: true });
-          const codeData = controller['calculateCodeBlocks'](response.data);
+          const waringRange = Range.fromPositions(
+            { lineNumber: errors[0].range.startPosition.lineNumber, column: 1 },
+            {
+              lineNumber: lastRange.endPosition.lineNumber,
+              column: model!.getLineMaxColumn(lastRange.endPosition.lineNumber),
+            },
+          );
 
-          return {
-            items: [
-              {
-                insertText: codeData,
-                range: waringRange
-              }
-            ]
-          };
+          const prompt = codeEditsLintErrorPrompt(
+            model.getValueInRange(waringRange),
+            errors,
+          );
+          const response = await this.aiBackService.request(prompt, {}, token);
+
+          if (response.data) {
+            const controller = new InlineChatController({
+              enableCodeblockRender: true,
+            });
+            const codeData = controller["calculateCodeBlocks"](response.data);
+
+            return {
+              items: [
+                {
+                  insertText: codeData,
+                  range: waringRange,
+                },
+              ],
+            };
+          }
         }
-      }
-      return undefined;
-    });
+        return undefined;
+      },
+    );
+  }
+
+  private getCrossCode(monacoEditor: ICodeEditor): string {
+    const model = monacoEditor.getModel();
+    if (!model) {
+      return "";
+    }
+
+    const selection = monacoEditor.getSelection();
+
+    if (!selection) {
+      return "";
+    }
+
+    const crossSelection = selection
+      .setStartPosition(selection.startLineNumber, 1)
+      .setEndPosition(selection.endLineNumber, Number.MAX_SAFE_INTEGER);
+    const crossCode = model.getValueInRange(crossSelection);
+    return crossCode;
   }
 }

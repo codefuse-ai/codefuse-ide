@@ -1,9 +1,10 @@
 import { Autowired } from '@opensumi/di';
+import { electronEnv } from '@opensumi/ide-core-browser';
 import { ClientAppContribution } from '@opensumi/ide-core-browser/lib/common';
 import { Domain, OnEvent, WithEventBus } from '@opensumi/ide-core-common';
 import { ThemeChangedEvent } from '@opensumi/ide-theme/lib/common';
+
 import { IThemeService } from '../common';
-import { electronEnv } from '@opensumi/ide-core-browser';
 
 @Domain(ClientAppContribution)
 export class LocalThemeContribution extends WithEventBus implements ClientAppContribution {

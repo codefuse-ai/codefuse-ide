@@ -1,21 +1,27 @@
+import { Autowired } from "@opensumi/di";
 import {
-  Domain,
-  CommandContribution,
-  CommandRegistry,
-  URI,
-  electronEnv,
   ClientAppContribution,
-  StorageProvider,
+  Domain,
+  electronEnv,
   FILE_COMMANDS,
-} from '@opensumi/ide-core-browser';
-import { IMenuRegistry, MenuId, MenuContribution } from '@opensumi/ide-core-browser/lib/menu/next';
-import { Autowired } from '@opensumi/di';
-import { IWorkspaceService } from '@opensumi/ide-workspace/lib/common';
-import { IWindowService, WORKSPACE_COMMANDS } from '@opensumi/ide-core-browser';
-import { ITerminalController } from '@opensumi/ide-terminal-next';
-import { IMainLayoutService } from '@opensumi/ide-main-layout';
-import { BrowserEditorContribution, WorkbenchEditorService } from '@opensumi/ide-editor/lib/browser';
-import { IThemeService } from '@opensumi/ide-theme';
+  IWindowService,
+  StorageProvider,
+  URI,
+} from "@opensumi/ide-core-browser";
+import {
+  MenuContribution,
+  MenuId,
+} from "@opensumi/ide-core-browser/lib/menu/next";
+import {
+  BrowserEditorContribution,
+  WorkbenchEditorService,
+} from "@opensumi/ide-editor/lib/browser";
+import { IMainLayoutService } from "@opensumi/ide-main-layout";
+import { ITerminalController } from "@opensumi/ide-terminal-next";
+import { IThemeService } from "@opensumi/ide-theme";
+import { IWorkspaceService } from "@opensumi/ide-workspace/lib/common";
+
+import type { IMenuRegistry } from "@opensumi/ide-core-browser/lib/menu/next";
 
 @Domain(MenuContribution, BrowserEditorContribution, ClientAppContribution)
 export class ProjectSwitcherContribution
@@ -32,28 +38,25 @@ export class ProjectSwitcherContribution
 
   @Autowired(WorkbenchEditorService)
   editorService: WorkbenchEditorService;
-
-  @Autowired(IMainLayoutService)
-  private mainLayoutService: IMainLayoutService;
-
-  @Autowired(IThemeService)
-  private themeService: IThemeService;
-
   @Autowired(StorageProvider)
   getStorage: StorageProvider;
+  @Autowired(IMainLayoutService)
+  private mainLayoutService: IMainLayoutService;
+  @Autowired(IThemeService)
+  private themeService: IThemeService;
 
   async onStart() {}
 
   registerMenus(registry: IMenuRegistry) {
     registry.registerMenuItem(MenuId.MenubarFileMenu, {
-      submenu: 'recentProjects',
-      label: '最近项目',
-      group: '1_open',
+      submenu: "recentProjects",
+      label: "最近项目",
+      group: "1_open",
     });
 
     this.workspaceService.getMostRecentlyUsedWorkspaces().then((workspaces) => {
       registry.registerMenuItems(
-        'recentProjects',
+        "recentProjects",
         workspaces.map((workspace) => ({
           command: {
             id: FILE_COMMANDS.VSCODE_OPEN_FOLDER.id,
@@ -69,7 +72,7 @@ export class ProjectSwitcherContribution
     if (electronEnv.metadata.launchToOpenFile) {
       this.editorService.open(URI.file(electronEnv.metadata.launchToOpenFile));
     }
-    electronEnv.ipcRenderer.on('openFile', (event, file) => {
+    electronEnv.ipcRenderer.on("openFile", (event, file) => {
       this.editorService.open(URI.file(file));
     });
   }

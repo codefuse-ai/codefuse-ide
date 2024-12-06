@@ -1,11 +1,9 @@
-import {
-  BaseLogServiceOptions,
-  LogLevel,
-  format,
-} from '@opensumi/ide-logs';
-import { uuid } from '@opensumi/ide-core-common';
-import type * as spdlog from '@vscode/spdlog'
-import { ILogService } from './types'
+import { uuid } from "@opensumi/ide-core-common";
+import { format, LogLevel } from "@opensumi/ide-logs";
+
+import type { ILogService } from "./types";
+import type { BaseLogServiceOptions } from "@opensumi/ide-logs";
+import type * as spdlog from "@vscode/spdlog";
 
 interface ILog {
   level: LogLevel;
@@ -19,75 +17,74 @@ interface ILogServiceOptions {
 }
 
 enum SpdLogLevel {
-	Trace,
-	Debug,
-	Info,
-	Warning,
-	Error,
-	Critical,
-	Off
+  Trace,
+  Debug,
+  Info,
+  Warning,
+  Error,
+  Critical,
+  Off,
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type LogArgumentType = any[];
 
 export abstract class AbstractLogService implements ILogService {
   protected logger: SpdLogger | undefined;
   protected logPath: string;
   protected logLevel: LogLevel;
 
-  constructor(options: ILogServiceOptions) {
+  protected constructor(options: ILogServiceOptions) {
     this.logPath = options.logPath;
     this.logLevel = options.logLevel || LogLevel.Info;
   }
 
-  abstract sendLog(level: LogLevel, message: string): void
+  abstract sendLog(level: LogLevel, message: string): void;
 
-  protected shouldLog(level: LogLevel): boolean {
-		return this.getLevel() <= level;
-	}
-
-  verbose(): void {
-    if (!this.shouldLog(LogLevel.Verbose)) return
-    this.sendLog(LogLevel.Verbose, format(arguments));
+  verbose(...args: LogArgumentType): void {
+    if (!this.shouldLog(LogLevel.Verbose)) return;
+    this.sendLog(LogLevel.Verbose, format(args));
   }
 
-  debug(): void {
-    if (!this.shouldLog(LogLevel.Debug)) return
-    this.sendLog(LogLevel.Debug, format(arguments));
+  debug(...args: LogArgumentType): void {
+    if (!this.shouldLog(LogLevel.Debug)) return;
+    this.sendLog(LogLevel.Debug, format(args));
   }
 
-  log(): void {
-    if (!this.shouldLog(LogLevel.Info)) return
-    this.sendLog(LogLevel.Info, format(arguments));
+  log(...args: LogArgumentType): void {
+    if (!this.shouldLog(LogLevel.Info)) return;
+    this.sendLog(LogLevel.Info, format(args));
   }
 
-  info(): void {
-    if (!this.shouldLog(LogLevel.Info)) return
-    this.sendLog(LogLevel.Info, format(arguments));
+  info(...args: LogArgumentType): void {
+    if (!this.shouldLog(LogLevel.Info)) return;
+    this.sendLog(LogLevel.Info, format(args));
   }
 
-  warn(): void {
-    if (!this.shouldLog(LogLevel.Warning)) return
-    this.sendLog(LogLevel.Warning, format(arguments));
+  warn(...args: LogArgumentType): void {
+    if (!this.shouldLog(LogLevel.Warning)) return;
+    this.sendLog(LogLevel.Warning, format(args));
   }
 
-  error(): void {
-    if (!this.shouldLog(LogLevel.Error)) return
-    const arg = arguments[0];
+  error(...args: LogArgumentType): void {
+    if (!this.shouldLog(LogLevel.Error)) return;
+    const arg = args[0];
     let message: string;
 
     if (arg instanceof Error) {
-      const array = Array.prototype.slice.call(arguments) as any[];
+      const array = Array.prototype.slice.call(arg) as LogArgumentType;
       array[0] = arg.stack;
       message = format(array);
       this.sendLog(LogLevel.Error, message);
     } else {
-      message = format(arguments);
+      message = format(args);
       this.sendLog(LogLevel.Error, message);
     }
   }
 
-  critical(): void {
-    if (!this.shouldLog(LogLevel.Critical)) return
-    this.sendLog(LogLevel.Critical, format(arguments));
+  critical(...args: LogArgumentType): void {
+    if (!this.shouldLog(LogLevel.Critical)) return;
+    this.sendLog(LogLevel.Critical, format(args));
   }
 
   setOptions(options: BaseLogServiceOptions) {
@@ -109,39 +106,24 @@ export abstract class AbstractLogService implements ILogService {
   async flush() {}
 
   dispose() {}
+
+  protected shouldLog(level: LogLevel): boolean {
+    return this.getLevel() <= level;
+  }
 }
 
 export class SpdLogger extends AbstractLogService {
   #buffer: ILog[] = [];
-	#spdLoggerCreatePromise: Promise<void>;
-	#logger: spdlog.Logger | undefined;
+  #spdLoggerCreatePromise: Promise<void>;
+  #logger: spdlog.Logger | undefined;
 
-	constructor(options: ILogServiceOptions) {
-		super(options);
-		this.#spdLoggerCreatePromise = this.#createSpdLogLogger();
-	}
+  constructor(options: ILogServiceOptions) {
+    super(options);
+    this.#spdLoggerCreatePromise = this.#createSpdLogLogger();
+  }
 
-	async #createSpdLogLogger(): Promise<void> {
-		const fileCount = 6;
-		const fileSize = 5 * 1024 * 1024;
-    try {
-      const _spdlog = await import('@vscode/spdlog');
-      _spdlog.setFlushOn(SpdLogLevel.Trace);
-      const logger = await _spdlog.createAsyncRotatingLogger(uuid(), this.logPath, fileSize, fileCount);
-      this.#logger = logger;
-      logger.setPattern('%Y-%m-%d %H:%M:%S.%e [%l] %v');
-      logger.setLevel(this.getSpdLogLevel(this.getLevel()))
-      for (const { level, message } of this.#buffer) {
-        this.sendLog( level, message);
-      }
-      this.#buffer = [];
-    } catch (e) {
-      console.error(e);
-    }
-	}
-
-	sendLog(level: LogLevel, message: string): void {
-		if (this.#logger) {
+  sendLog(level: LogLevel, message: string): void {
+    if (this.#logger) {
       switch (level) {
         case LogLevel.Verbose:
           return this.#logger.trace(message);
@@ -156,20 +138,20 @@ export class SpdLogger extends AbstractLogService {
         case LogLevel.Critical:
           return this.#logger.critical(message);
         default:
-          throw new Error('Invalid log level');
+          throw new Error("Invalid log level");
       }
-		} else if (this.getLevel() <= level) {
-			this.#buffer.push({ level, message });
-		}
-	}
+    } else if (this.getLevel() <= level) {
+      this.#buffer.push({ level, message });
+    }
+  }
 
-	override async flush() {
-		if (this.#logger) {
-			this.#logger.flush();
-		} else {
-			this.#spdLoggerCreatePromise.then(() => this.flush());
-		}
-	}
+  override async flush() {
+    if (this.#logger) {
+      this.#logger.flush();
+    } else {
+      this.#spdLoggerCreatePromise.then(() => this.flush());
+    }
+  }
 
   override async drop() {
     if (this.#logger) {
@@ -179,19 +161,50 @@ export class SpdLogger extends AbstractLogService {
     }
   }
 
-	override dispose(): void {
-		this.drop();
-	}
+  override dispose(): void {
+    this.drop();
+  }
+
+  async #createSpdLogLogger(): Promise<void> {
+    const fileCount = 6;
+    const fileSize = 5 * 1024 * 1024;
+    try {
+      const _spdlog = await import("@vscode/spdlog");
+      _spdlog.setFlushOn(SpdLogLevel.Trace);
+      const logger = await _spdlog.createAsyncRotatingLogger(
+        uuid(),
+        this.logPath,
+        fileSize,
+        fileCount,
+      );
+      this.#logger = logger;
+      logger.setPattern("%Y-%m-%d %H:%M:%S.%e [%l] %v");
+      logger.setLevel(this.getSpdLogLevel(this.getLevel()));
+      for (const { level, message } of this.#buffer) {
+        this.sendLog(level, message);
+      }
+      this.#buffer = [];
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   private getSpdLogLevel(level: LogLevel): SpdLogLevel {
     switch (level) {
-      case LogLevel.Verbose: return SpdLogLevel.Trace;
-      case LogLevel.Debug: return SpdLogLevel.Debug;
-      case LogLevel.Info: return SpdLogLevel.Info;
-      case LogLevel.Warning: return SpdLogLevel.Warning;
-      case LogLevel.Error: return SpdLogLevel.Error;
-      case LogLevel.Critical: return SpdLogLevel.Critical;
-      default: return SpdLogLevel.Off;
+      case LogLevel.Verbose:
+        return SpdLogLevel.Trace;
+      case LogLevel.Debug:
+        return SpdLogLevel.Debug;
+      case LogLevel.Info:
+        return SpdLogLevel.Info;
+      case LogLevel.Warning:
+        return SpdLogLevel.Warning;
+      case LogLevel.Error:
+        return SpdLogLevel.Error;
+      case LogLevel.Critical:
+        return SpdLogLevel.Critical;
+      default:
+        return SpdLogLevel.Off;
     }
   }
 }

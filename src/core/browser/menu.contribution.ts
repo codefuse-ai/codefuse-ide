@@ -1,11 +1,14 @@
 import { Autowired } from '@opensumi/di'
-import { CommandContribution, CommandRegistry, Domain, MaybePromise } from '@opensumi/ide-core-common'
 import { ClientAppContribution, electronEnv } from '@opensumi/ide-core-browser'
-import { IMenuRegistry, MenuId, MenuContribution } from "@opensumi/ide-core-browser/lib/menu/next";
+import { MenuId, MenuContribution } from "@opensumi/ide-core-browser/lib/menu/next";
+import { CommandContribution, Domain } from '@opensumi/ide-core-common'
+import { IElectronMainUIService } from '@opensumi/ide-core-common/lib/electron';
 import { localize } from "@opensumi/ide-core-common/lib/localize";
 import { IWorkspaceService } from '@opensumi/ide-workspace';
+
 import { IAppMenuService } from '../common';
-import { IElectronMainUIService } from '@opensumi/ide-core-common/lib/electron';
+import type { IMenuRegistry} from "@opensumi/ide-core-browser/lib/menu/next";
+import type { CommandRegistry, MaybePromise } from '@opensumi/ide-core-common';
 
 const OPEN_LOGO_DIR_COMMAND_ID = {
   id: 'codefuse-ide.openLogDir',

@@ -1,6 +1,8 @@
 import { Domain } from '@opensumi/ide-core-browser';
-import { ComponentContribution, ComponentRegistry } from '@opensumi/ide-core-browser/lib/layout';
+import { ComponentContribution } from '@opensumi/ide-core-browser/lib/layout';
+
 import { ElectronHeaderBar } from './header.view'
+import type { ComponentRegistry } from '@opensumi/ide-core-browser/lib/layout';
 
 export const ELECTRON_HEADER = 'electron_header';
 export const WINDOW = 'electron_header';

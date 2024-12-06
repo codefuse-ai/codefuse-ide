@@ -1,5 +1,7 @@
 import path from 'node:path';
+
 import CopyPlugin from 'copy-webpack-plugin';
+
 import { createConfig, webpackDir } from './webpack.base.config';
 
 const outDir = path.join(webpackDir, 'webview');

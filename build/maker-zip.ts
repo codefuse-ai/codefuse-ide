@@ -1,8 +1,14 @@
-import { MakerBase, MakerOptions } from '@electron-forge/maker-base';
-import { ForgePlatform } from '@electron-forge/shared-types';
-import { build } from 'app-builder-lib'
 import path from 'node:path'
+
+import { MakerBase } from '@electron-forge/maker-base';
+import { build } from 'app-builder-lib'
+
 import { productName, applicationName } from '../product.json'
+import type { MakerOptions } from '@electron-forge/maker-base';
+import type { ForgePlatform } from '@electron-forge/shared-types';
+
+
+
 
 interface MakerZipConfig {}
 

@@ -1,21 +1,23 @@
-import http from 'http';
+import fs from 'fs/promises';
 import path from 'path';
 
 import { namedHookWithTaskFn, PluginBase } from '@electron-forge/plugin-base';
-import { ForgeMultiHookMap, StartResult } from '@electron-forge/shared-types';
-import Logger, { Tab } from '@electron-forge/web-multi-logger';
+import Logger from '@electron-forge/web-multi-logger';
 import chalk from 'chalk';
 import debug from 'debug';
-import fs from 'fs/promises';
 import { PRESET_TIMER } from 'listr2';
-import webpack, { Configuration, Watching, Compiler } from 'webpack';
+import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 
-import mainConfig from './webpack.main.config'
-import rendererConfig from './webpack.renderer.config'
-import nodeConfig from './webpack.node.config'
 import { extHostConfig, workerHostConfig } from './webpack.ext-host.config'
+import mainConfig from './webpack.main.config'
+import nodeConfig from './webpack.node.config'
+import rendererConfig from './webpack.renderer.config'
 import webviewConfig from './webpack.webview.config'
+import type { ForgeMultiHookMap, StartResult } from '@electron-forge/shared-types';
+import type { Tab } from '@electron-forge/web-multi-logger';
+import type http from 'http';
+import type { Configuration, Watching, Compiler } from 'webpack';
 
 const d = debug('electron-forge:plugin:webpack');
 const DEFAULT_LOGGER_PORT = 9000;

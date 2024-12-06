@@ -1,15 +1,15 @@
-import { BrowserModule } from '@opensumi/ide-core-browser';
-import { Injectable } from '@opensumi/di';
+import { Injectable } from "@opensumi/di";
+import { BrowserModule } from "@opensumi/ide-core-browser";
 
-import { AINativeContribution } from './ai-native.contribution'
-import { AIRunContribution } from './ai-run.contribution'
-import { AICommandPromptManager } from './command/command-prompt-manager'
-import { AICommandService } from './command/command.service'
-import { InlineChatOperationModel } from './inline-chat-operation'
-import { AIModelContribution } from './ai-model.contribution'
-import { AIModelServicePath } from '../common'
+import { AIModelContribution } from "./ai-model.contribution";
+import { AINativeContribution } from "./ai-native.contribution";
+import { AIRunContribution } from "./ai-run.contribution";
+import { AICommandPromptManager } from "./command/command-prompt-manager";
+import { AICommandService } from "./command/command.service";
+import { InlineChatOperationModel } from "./inline-chat-operation";
+import { AIModelServicePath } from "../common";
 
-export * from './constants'
+export * from "./constants";
 
 @Injectable()
 export class AIFeatureModule extends BrowserModule {
@@ -25,6 +25,6 @@ export class AIFeatureModule extends BrowserModule {
   backServices = [
     {
       servicePath: AIModelServicePath,
-    }
-  ]
+    },
+  ];
 }
