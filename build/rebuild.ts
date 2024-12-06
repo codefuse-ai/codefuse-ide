@@ -1,5 +1,7 @@
 import * as path from 'node:path';
+
 import { version as electronVersion } from 'electron/package.json'
+
 import { nativeDeps, postInstallDeps } from './deps'
 import { exec } from './util'
 

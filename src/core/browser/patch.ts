@@ -1,12 +1,15 @@
-import { Autowired, Provider } from '@opensumi/di'
-import { Domain, Schemes, URI } from '@opensumi/ide-core-common'
-import { AppConfig, WorkspaceScope } from '@opensumi/ide-core-browser'
-import { IMenuRegistry, MenuId, MenuContribution, IMenuItem } from "@opensumi/ide-core-browser/lib/menu/next";
-import { FILE_COMMANDS, ClientAppContribution, formatLocalize, StaticResourceContribution, StaticResourceService, electronEnv } from '@opensumi/ide-core-browser'
-import { IViewsRegistry } from '@opensumi/ide-main-layout';
-import { RESOURCE_VIEW_ID } from '@opensumi/ide-file-tree-next'
+import { Autowired } from '@opensumi/di'
+import { AppConfig, WorkspaceScope , FILE_COMMANDS, ClientAppContribution, formatLocalize, StaticResourceContribution, electronEnv } from '@opensumi/ide-core-browser'
+import { MenuId, MenuContribution } from "@opensumi/ide-core-browser/lib/menu/next";
 import { IPreferenceSettingsService } from '@opensumi/ide-core-browser/lib/preferences';
+import { Domain, Schemes, URI } from '@opensumi/ide-core-common'
+import { RESOURCE_VIEW_ID } from '@opensumi/ide-file-tree-next'
+import { IViewsRegistry } from '@opensumi/ide-main-layout';
 import { PreferenceSettingsService } from '@opensumi/ide-preferences/lib/browser/preference-settings.service'
+
+import type { Provider } from '@opensumi/di';
+import type { StaticResourceService} from '@opensumi/ide-core-browser';
+import type { IMenuRegistry, IMenuItem } from "@opensumi/ide-core-browser/lib/menu/next";
 
 @Domain(ClientAppContribution, MenuContribution, StaticResourceContribution)
 export class PatchContribution implements MenuContribution, ClientAppContribution, StaticResourceContribution {

@@ -1,37 +1,38 @@
-import type { UpdateInfo, ProgressInfo } from 'electron-updater'
+import type { ProgressInfo, UpdateInfo } from "electron-updater";
 
-export { UpdateInfo, ProgressInfo }
+export { UpdateInfo, ProgressInfo };
 
 export const enum UpdateState {
-  NoAvailable = 'NoAvailable',
-  Checking = 'Checking',
-  CheckingError = 'CheckingError',
-  Available = 'Available',
-  Downloading = 'Downloading',
-  DownloadError = 'DownloadError',
-  Downloaded = 'Downloaded',
-  UpdateError = 'UpdateError'
+  NoAvailable = "NoAvailable",
+  Checking = "Checking",
+  CheckingError = "CheckingError",
+  Available = "Available",
+  Downloading = "Downloading",
+  DownloadError = "DownloadError",
+  Downloaded = "Downloaded",
+  UpdateError = "UpdateError",
 }
 
-export const IUpdateMainService = 'IUpdateMainService'
+export const IUpdateMainService = "IUpdateMainService";
 export interface IUpdateMainService {
-  checkForUpdatesManual(): Promise<void>
+  checkForUpdatesManual(): Promise<void>;
 }
 
 export enum IPC_CHANNEL {
-  initialState = 'initialState',
-  downloadAndInstall = 'downloadAndInstall',
-  eventData = 'eventData',
-  ignoreVersion = 'ignoreVersion'
+  initialState = "initialState",
+  downloadAndInstall = "downloadAndInstall",
+  eventData = "eventData",
+  ignoreVersion = "ignoreVersion",
 }
 
 export interface InitialState {
-  updateState: UpdateState,
-  updateInfo: UpdateInfo | null,
-  progressInfo: ProgressInfo | null,
+  updateState: UpdateState;
+  updateInfo: UpdateInfo | null;
+  progressInfo: ProgressInfo | null;
 }
 
 export interface EventData {
   event: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
 }

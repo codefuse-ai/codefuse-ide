@@ -1,12 +1,14 @@
-import { app } from 'electron'
 import * as fs from 'node:fs/promises'
+
 import { Autowired } from '@opensumi/di'
 import { Domain } from '@opensumi/ide-core-common'
-import { ILogService } from '@/logger/common'
+import { app } from 'electron'
+
 import { ElectronMainContribution } from './types'
 import { IEnvironmentService } from '../common'
 import { StorageService } from './storage.service'
 import { WindowsManager } from './window/windows-manager'
+import { ILogService } from '@/logger/common'
 
 @Domain(ElectronMainContribution)
 export class LifecycleContribution implements ElectronMainContribution {

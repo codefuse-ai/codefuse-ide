@@ -7,3 +7,4 @@ export enum EInlineOperation {
   Test = 'Test',
   Optimize = 'Optimize',
 }
+

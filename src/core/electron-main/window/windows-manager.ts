@@ -1,23 +1,33 @@
-import { BrowserWindowConstructorOptions } from 'electron'
-import { isWindows, URI } from '@opensumi/ide-core-common';
-import { Injectable, INJECTOR_TOKEN, Autowired, Injector } from '@opensumi/di'
-import { IWindowOpenOptions, ElectronAppConfig, IElectronMainApp, ElectronMainApp } from '@opensumi/ide-core-electron-main'
-import { IEnvironmentService, StorageKey } from '../../common'
-import { ThemeService } from '../theme.service'
+import { Autowired, Injectable, INJECTOR_TOKEN } from "@opensumi/di";
+import { isWindows } from "@opensumi/ide-core-common";
+import {
+  ElectronAppConfig,
+  IElectronMainApp,
+} from "@opensumi/ide-core-electron-main";
+
+import { IEnvironmentService } from "../../common";
+import { ThemeService } from "../theme.service";
+import type { Injector } from "@opensumi/di";
+import type { URI } from "@opensumi/ide-core-common";
+import type {
+  ElectronMainApp,
+  IWindowOpenOptions,
+} from "@opensumi/ide-core-electron-main";
+import type { BrowserWindowConstructorOptions } from "electron";
 
 @Injectable()
 export class WindowsManager {
   @Autowired(INJECTOR_TOKEN)
-  injector: Injector
+  injector: Injector;
 
   @Autowired(ElectronAppConfig)
-  appConfig: ElectronAppConfig
+  appConfig: ElectronAppConfig;
 
   @Autowired(IElectronMainApp)
-  mainApp: ElectronMainApp
+  mainApp: ElectronMainApp;
 
   @Autowired(IEnvironmentService)
-  environmentService: IEnvironmentService
+  environmentService: IEnvironmentService;
 
   @Autowired(ThemeService)
   themeService: ThemeService;
@@ -26,13 +36,15 @@ export class WindowsManager {
     if (workspaceUri) {
       for (const codeWindow of this.mainApp.getCodeWindows()) {
         if (codeWindow.workspace?.toString() === workspaceUri.toString()) {
-          codeWindow.getBrowserWindow().show()
+          codeWindow.getBrowserWindow().show();
           return;
         }
       }
     }
     if (options?.windowId) {
-      const codeWindow = this.mainApp.getCodeWindowByElectronBrowserWindowId(options.windowId)
+      const codeWindow = this.mainApp.getCodeWindowByElectronBrowserWindowId(
+        options.windowId,
+      );
       if (codeWindow) {
         if (workspaceUri) {
           codeWindow.setWorkspace(workspaceUri.toString());
@@ -46,13 +58,17 @@ export class WindowsManager {
 
   createCodeWindow(
     workspaceUri?: URI,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata?: any,
     browserWindowOptions?: BrowserWindowConstructorOptions,
   ) {
     this.themeService.setSystemTheme();
-    const editorBackground = this.themeService.themeBackgroundColor.editorBackground ||  '#1e1e1e'
-    const menuBarBackground = this.themeService.themeBackgroundColor.menuBarBackground || editorBackground;
-    
+    const editorBackground =
+      this.themeService.themeBackgroundColor.editorBackground || "#1e1e1e";
+    const menuBarBackground =
+      this.themeService.themeBackgroundColor.menuBarBackground ||
+      editorBackground;
+
     const codeWindow = this.mainApp.loadWorkspace(
       workspaceUri ? workspaceUri.toString() : undefined,
       {
@@ -68,9 +84,12 @@ export class WindowsManager {
           x: 10,
           y: 10,
         },
-        ...(isWindows ? {
-          titleBarOverlay: this.themeService.getTitleBarOverlay(menuBarBackground)
-        } : null),
+        ...(isWindows
+          ? {
+              titleBarOverlay:
+                this.themeService.getTitleBarOverlay(menuBarBackground),
+            }
+          : null),
         show: false,
         backgroundColor: editorBackground,
         ...browserWindowOptions,
@@ -81,10 +100,10 @@ export class WindowsManager {
           contextIsolation: false,
           webSecurity: !this.environmentService.isDev,
         },
-      }
+      },
     );
 
-    const browserWindow = codeWindow.getBrowserWindow()
+    const browserWindow = codeWindow.getBrowserWindow();
     // 默认全屏
     // TODO: 支持窗口状态缓存
     browserWindow.maximize();

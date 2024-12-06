@@ -1,7 +1,9 @@
 import path from 'node:path';
+
 import { DefinePlugin } from 'webpack';
-import product from '../../product.json';
+
 import { createConfig, webpackDir, devServerPort, codeWindowName, updateWindowName } from './webpack.base.config';
+import product from '../../product.json';
 import { asarDeps } from '../deps'
 
 const srcDir = path.resolve('src/bootstrap/electron-main');

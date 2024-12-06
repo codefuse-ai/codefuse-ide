@@ -1,8 +1,12 @@
 import { Autowired } from '@opensumi/di'
-import { app, JumpListCategory } from 'electron'
-import { Domain, isWindows, localize, MaybePromise } from '@opensumi/ide-core-common'
-import { ILogService } from '@/logger/common'
+import { Domain, isWindows, localize } from '@opensumi/ide-core-common'
+import { app } from 'electron'
+
+
 import { ElectronMainContribution } from '../types'
+import { ILogService } from '@/logger/common'
+import type { MaybePromise } from '@opensumi/ide-core-common';
+import type { JumpListCategory } from 'electron';
 
 @Domain(ElectronMainContribution)
 export class WorkspaceHistoryContribution implements ElectronMainContribution {

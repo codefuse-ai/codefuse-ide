@@ -1,13 +1,15 @@
-import { app, Menu, MenuItem } from 'electron'
 import { Autowired, Injectable } from '@opensumi/di'
 import { Domain, isMacintosh, localize, FileUri } from '@opensumi/ide-core-common'
 import {
-  ElectronMainApiRegistry,
   ElectronMainApiProvider,
 } from '@opensumi/ide-core-electron-main/lib/bootstrap/types';
+import { app, Menu, MenuItem } from 'electron'
+
 import { IAppMenuService } from '../common'
 import { ElectronMainContribution } from './types'
 import { WindowsManager } from './window/windows-manager'
+import type {
+  ElectronMainApiRegistry} from '@opensumi/ide-core-electron-main/lib/bootstrap/types';
 
 @Injectable()
 export class AppMenuService extends ElectronMainApiProvider implements IAppMenuService {

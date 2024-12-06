@@ -1,16 +1,18 @@
 import { Autowired } from '@opensumi/di';
 import { ClientAppContribution, Domain, RecentFilesManager, URI, localize } from '@opensumi/ide-core-browser';
-import { IResource, ResourceService, WorkbenchEditorService } from '@opensumi/ide-editor';
+import { WorkbenchEditorService } from '@opensumi/ide-editor';
 import {
   BrowserEditorContribution,
-  EditorComponentRegistry,
   EditorComponentRenderMode,
   EditorOpenType,
 } from '@opensumi/ide-editor/lib/browser';
 import { IWorkspaceService } from '@opensumi/ide-workspace';
 
-import { IWelcomeMetaData } from './common'
+import type { IWelcomeMetaData } from './common'
 import { EditorWelcomeComponent } from './welcome.component';
+import type { IResource, ResourceService} from '@opensumi/ide-editor';
+import type {
+  EditorComponentRegistry} from '@opensumi/ide-editor/lib/browser';
 
 @Domain(BrowserEditorContribution, ClientAppContribution)
 export class WelcomeContribution implements BrowserEditorContribution, ClientAppContribution {

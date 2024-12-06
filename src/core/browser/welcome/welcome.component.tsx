@@ -1,55 +1,64 @@
-import React from 'react';
-
 import {
   CommandService,
   FILE_COMMANDS,
   FileUri,
   IWindowService,
-  URI,
   localize,
+  URI,
   useInjectable,
-} from '@opensumi/ide-core-browser';
-import { ReactEditorComponent } from '@opensumi/ide-editor/lib/browser';
-import { IFileServiceClient } from '@opensumi/ide-file-service';
-import { IMessageService } from '@opensumi/ide-overlay';
-import { posix, win32 } from '@opensumi/ide-utils/lib/path'
+} from "@opensumi/ide-core-browser";
+import { IFileServiceClient } from "@opensumi/ide-file-service";
+import { IMessageService } from "@opensumi/ide-overlay";
+import { posix, win32 } from "@opensumi/ide-utils/lib/path";
+import React from "react";
 
-import { IWelcomeMetaData } from './common';
-import styles from './welcome.module.less';
+import type { IWelcomeMetaData } from "./common";
+import styles from "./welcome.module.less";
+import type { ReactEditorComponent } from "@opensumi/ide-editor/lib/browser";
 
-export const EditorWelcomeComponent: ReactEditorComponent<IWelcomeMetaData> = ({ resource }) => {
-  const commandService: CommandService = useInjectable<CommandService>(CommandService);
-  const windowService: IWindowService = useInjectable<IWindowService>(IWindowService);
-  const fileService: IFileServiceClient = useInjectable<IFileServiceClient>(IFileServiceClient);
-  const messageService: IMessageService = useInjectable<IMessageService>(IMessageService);
+export const EditorWelcomeComponent: ReactEditorComponent<IWelcomeMetaData> = ({
+  // eslint-disable-next-line react/prop-types
+  resource,
+}) => {
+  const commandService: CommandService =
+    useInjectable<CommandService>(CommandService);
+  const windowService: IWindowService =
+    useInjectable<IWindowService>(IWindowService);
+  const fileService: IFileServiceClient =
+    useInjectable<IFileServiceClient>(IFileServiceClient);
+  const messageService: IMessageService =
+    useInjectable<IMessageService>(IMessageService);
 
   return (
     <div className={styles.welcome}>
       <div>
-        <h2>{localize('welcome.quickStart')}</h2>
+        <h2>{localize("welcome.quickStart")}</h2>
         <div>
           <a
             onClick={() => {
-              commandService.executeCommand(FILE_COMMANDS.OPEN_FOLDER.id, { newWindow: false });
+              commandService.executeCommand(FILE_COMMANDS.OPEN_FOLDER.id, {
+                newWindow: false,
+              });
             }}
           >
-            {localize('file.open.folder')}
+            {localize("file.open.folder")}
           </a>
         </div>
       </div>
       <div>
-        <h2>{localize('welcome.recent.workspace')}</h2>
+        <h2>{localize("welcome.recent.workspace")}</h2>
+        {/* eslint-disable-next-line react/prop-types */}
         {resource.metadata?.recentWorkspaces.map((workspace) => {
           let workspacePath = workspace;
-          if (workspace.startsWith('file://')) {
+          if (workspace.startsWith("file://")) {
             workspacePath = FileUri.fsPath(workspace);
           }
-          const p = workspacePath.indexOf('/') !== -1 ? posix : win32;
+          const p = workspacePath.indexOf("/") !== -1 ? posix : win32;
           let name = p.basename(workspacePath);
           let parentPath = p.dirname(workspacePath);
           if (!name.length) {
-            name = parentPath
-            parentPath = ''
+            name = parentPath;
+            parentPath = "";
           }
           // only the root segment
           return (
@@ -61,7 +70,7 @@ export const EditorWelcomeComponent: ReactEditorComponent<IWelcomeMetaData> = ({
                   if (exist) {
                     windowService.openWorkspace(uri, { newWindow: false });
                   } else {
-                    messageService.error(localize('welcome.workspace.noExist'));
+                    messageService.error(localize("welcome.workspace.noExist"));
                   }
                 }}
               >

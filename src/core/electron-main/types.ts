@@ -1,5 +1,6 @@
-import { MaybePromise,  } from '@opensumi/ide-core-common'
 import { ElectronMainContribution as BaseElectronMainContribution } from '@opensumi/ide-core-electron-main';
+
+import type { MaybePromise,  } from '@opensumi/ide-core-common'
 
 export const ElectronMainContribution = BaseElectronMainContribution;
 

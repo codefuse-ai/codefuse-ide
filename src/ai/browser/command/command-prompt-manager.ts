@@ -1,5 +1,4 @@
 import { Injectable } from '@opensumi/di';
-
 import { BasePromptManager } from '@opensumi/ide-ai-native/lib/common/prompts/base-prompt-manager';
 
 export interface PromptOption {

@@ -1,33 +1,48 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { ChatMarkdown } from "@opensumi/ide-ai-native/lib/browser/components/ChatMarkdown";
+import {
+  ChatThinking,
+  ChatThinkingResult,
+} from "@opensumi/ide-ai-native/lib/browser/components/ChatThinking";
+import {
+  CommandService,
+  COMMON_COMMANDS,
+  useInjectable,
+} from "@opensumi/ide-core-browser";
+import { Button } from "@opensumi/ide-core-browser/lib/components";
+import { CommandOpener } from "@opensumi/ide-core-browser/lib/opener/command-opener";
+import { URI } from "@opensumi/ide-core-common";
+import React, { useCallback, useEffect, useMemo } from "react";
 
-import { ChatThinking, ChatThinkingResult } from '@opensumi/ide-ai-native/lib/browser/components/ChatThinking';
-import { ChatMarkdown } from '@opensumi/ide-ai-native/lib/browser/components/ChatMarkdown';
-import { TSlashCommandCustomRender } from '@opensumi/ide-ai-native/lib/browser/types';
-import { useInjectable, COMMON_COMMANDS, CommandService } from '@opensumi/ide-core-browser';
-import { Button } from '@opensumi/ide-core-browser/lib/components';
-import { CommandOpener } from '@opensumi/ide-core-browser/lib/opener/command-opener';
-import { IAIBackServiceResponse, URI } from '@opensumi/ide-core-common';
-import { AICommandService, ISumiModelResp, ISumiCommandModelResp, ISumiSettingModelResp } from './command.service';
-
-import styles from './command-render.module.less';
+import styles from "./command-render.module.less";
+import type {
+  ISumiCommandModelResp,
+  ISumiModelResp,
+  ISumiSettingModelResp,
+} from "./command.service";
+import { AICommandService } from "./command.service";
+import type { TSlashCommandCustomRender } from "@opensumi/ide-ai-native/lib/browser/types";
+import type { IAIBackServiceResponse } from "@opensumi/ide-core-common";
 
 const AiResponseTips = {
-  ERROR_RESPONSE: '当前与我互动的人太多，请稍后再试，感谢您的理解与支持',
-  STOP_IMMEDIATELY: '我先不想了，有需要可以随时问我',
-  NOTFOUND_COMMAND: '很抱歉，暂时未找到可立即执行的命令。',
-  NOTFOUND_COMMAND_TIP: '你可以打开命令面板搜索相关操作或者重新提问。'
+  ERROR_RESPONSE: "当前与我互动的人太多，请稍后再试，感谢您的理解与支持",
+  STOP_IMMEDIATELY: "我先不想了，有需要可以随时问我",
+  NOTFOUND_COMMAND: "很抱歉，暂时未找到可立即执行的命令。",
+  NOTFOUND_COMMAND_TIP: "你可以打开命令面板搜索相关操作或者重新提问。",
 };
 
+// eslint-disable-next-line react/prop-types
 export const CommandRender: TSlashCommandCustomRender = ({ userMessage }) => {
   const aiSumiService = useInjectable<AICommandService>(AICommandService);
   const opener = useInjectable<CommandOpener>(CommandOpener);
   const commandService = useInjectable<CommandService>(CommandService);
 
   const [loading, setLoading] = React.useState(false);
-  const [modelRes, setModelRes] = React.useState<IAIBackServiceResponse<ISumiModelResp>>();
+  const [modelRes, setModelRes] =
+    React.useState<IAIBackServiceResponse<ISumiModelResp>>();
 
   const userInput = useMemo(() => {
-    return userMessage.replace('/IDE', '').trim();
+    // eslint-disable-next-line react/prop-types
+    return userMessage.replace("/IDE", "").trim();
   }, [userMessage]);
 
   useEffect(() => {
@@ -37,7 +52,8 @@ export const CommandRender: TSlashCommandCustomRender = ({ userMessage }) => {
 
     setLoading(true);
 
-    aiSumiService.getModelResp(userInput)
+    aiSumiService
+      .getModelResp(userInput)
       .then((resp) => {
         setModelRes(resp);
       })
@@ -48,35 +64,37 @@ export const CommandRender: TSlashCommandCustomRender = ({ userMessage }) => {
 
   const excute = useCallback(() => {
     if (modelRes && modelRes.data) {
-      if (type === 'command') {
+      if (type === "command") {
         const modelData = data as ISumiCommandModelResp;
         opener.open(URI.parse(`command:${modelData.commandKey}`));
         return;
       }
 
-      if (type === 'setting') {
+      if (type === "setting") {
         const modelData = data as ISumiSettingModelResp;
 
-        commandService.executeCommand(COMMON_COMMANDS.OPEN_PREFERENCES.id, modelData.settingKey);
+        commandService.executeCommand(
+          COMMON_COMMANDS.OPEN_PREFERENCES.id,
+          modelData.settingKey,
+        );
       }
     }
   }, [modelRes]);
 
-
   const failedText = useMemo(() => {
     if (!modelRes) {
-      return '';
+      return "";
     }
 
     return modelRes.errorCode
       ? AiResponseTips.ERROR_RESPONSE
       : !modelRes.data
         ? AiResponseTips.NOTFOUND_COMMAND
-        : '';
+        : "";
   }, [modelRes]);
 
   const handleRegenerate = useCallback(() => {
-    console.log('retry');
+    console.log("retry");
   }, []);
 
   if (loading || !modelRes) {
@@ -91,12 +109,12 @@ export const CommandRender: TSlashCommandCustomRender = ({ userMessage }) => {
             <p>{failedText}</p>
             <p>{AiResponseTips.NOTFOUND_COMMAND_TIP}</p>
             <Button
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
               onClick={() =>
                 opener.open(
                   URI.from({
-                    scheme: 'command',
-                    path: 'editor.action.quickCommand.withCommand',
+                    scheme: "command",
+                    path: "editor.action.quickCommand.withCommand",
                     query: JSON.stringify([userInput]),
                   }),
                 )
@@ -118,10 +136,10 @@ export const CommandRender: TSlashCommandCustomRender = ({ userMessage }) => {
   return (
     <ChatThinkingResult onRegenerate={handleRegenerate}>
       <div className={styles.chat_excute_result}>
-        <ChatMarkdown markdown={answer ?? ''} />
-        {type !== 'null' && (
-          <Button onClick={excute} style={{ marginTop: '12px' }}>
-            {type === 'command' ? '点击执行' : '在设置编辑器中显示'}
+        <ChatMarkdown markdown={answer ?? ""} />
+        {type !== "null" && (
+          <Button onClick={excute} style={{ marginTop: "12px" }}>
+            {type === "command" ? "点击执行" : "在设置编辑器中显示"}
           </Button>
         )}
       </div>

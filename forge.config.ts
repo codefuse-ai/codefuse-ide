@@ -1,15 +1,16 @@
-import type { ForgeConfig } from '@electron-forge/shared-types';
-import path from 'path'
 import fsp from 'fs/promises'
-import { downloadExtensions } from './build/download-extensions'
-import { WebpackPlugin } from './build/webpack/ForgeWebpackPlugin'
+import path from 'path'
+
 import { buildAsar } from './build/build-asar'
-import { signWinApp } from './build/util'
-import { rebuild } from './build/rebuild'
+import { downloadExtensions } from './build/download-extensions'
 import { MakerNsis } from './build/maker-nisi'
 import { MakerZip } from './build/maker-zip'
+import { rebuild } from './build/rebuild'
+import { signWinApp } from './build/util'
+import { WebpackPlugin } from './build/webpack/ForgeWebpackPlugin'
 import packageData from './package.json'
 import productData from './product.json'
+import type { ForgeConfig } from '@electron-forge/shared-types';
 
 const config: ForgeConfig = {
   packagerConfig: {

@@ -1,5 +1,5 @@
-import { IMarkerErrorData } from '@opensumi/ide-ai-native/lib/browser/contrib/intelligent-completions/source/lint-error.source';
-import { EInlineOperation } from './constants'
+import { EInlineOperation } from "./constants";
+import type { IMarkerErrorData } from "@opensumi/ide-ai-native/lib/browser/contrib/intelligent-completions/source/lint-error.source";
 
 export const explainPrompt = (language: string, code: string) => {
   return `你将获得一段代码, 你的任务是以简洁的方式解释它，用中文回答。代码内容是: \n\`\`\`${language}\n${code}\n\`\`\``;
@@ -50,7 +50,12 @@ export const terminalCommandSuggestionPrompt = (message: string) => {
 };
 
 export class RenamePromptManager {
-  static requestPrompt(language: string, varName: string, above: string, below: string) {
+  static requestPrompt(
+    language: string,
+    varName: string,
+    above: string,
+    below: string,
+  ) {
     const prompt = `
     我需要你的帮助，请帮我推荐 5 个指定变量的重命名候选项。
 我希望这些新的变量名能更符合代码上下文、整段代码的风格，更有意义。
@@ -84,13 +89,15 @@ ${below.slice(0, 500)}
       return [];
     }
 
-    const lines = result[0].replace(/```/g, '').trim().split('\n');
+    const lines = result[0].replace(/```/g, "").trim().split("\n");
     return lines;
   }
 }
 
-
-export const codeEditsLintErrorPrompt = (text: string, errors: IMarkerErrorData[]) => {
+export const codeEditsLintErrorPrompt = (
+  text: string,
+  errors: IMarkerErrorData[],
+) => {
   return `
   #Role: 代码领域的 IDE 专家
 
@@ -120,7 +127,7 @@ ${text}
 \`\`\`
   
   ##LintErrors:
-  ${JSON.stringify(errors.map(e => ({ message: e.message })))}
+  ${JSON.stringify(errors.map((e) => ({ message: e.message })))}
 
   请根据上述错误信息，直接提供修复后的代码，不需要解释
 `;

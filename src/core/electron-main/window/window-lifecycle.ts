@@ -1,8 +1,10 @@
+import { URI } from '@opensumi/ide-core-common';
 import { BrowserWindow } from 'electron';
-import { Injector } from '@opensumi/di'
-import { IElectronMainApiProvider, ElectronMainApp, IWindowOpenOptions } from '@opensumi/ide-core-electron-main'
-import { ExtensionCandidate, URI } from '@opensumi/ide-core-common';
+
 import { WindowsManager } from './windows-manager'
+import type { Injector } from '@opensumi/di'
+import type { ExtensionCandidate} from '@opensumi/ide-core-common';
+import type { IElectronMainApiProvider, ElectronMainApp, IWindowOpenOptions } from '@opensumi/ide-core-electron-main'
 
 export class WindowLifecycle implements IElectronMainApiProvider<void> {
   eventEmitter: undefined;

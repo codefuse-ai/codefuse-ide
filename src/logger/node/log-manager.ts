@@ -1,5 +1,7 @@
 import * as path from 'path'
+
 import { Injectable } from '@opensumi/di';
+
 import { AbstractLogServiceManager } from '../common'
 
 @Injectable()

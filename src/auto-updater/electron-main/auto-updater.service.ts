@@ -1,15 +1,23 @@
-import { autoUpdater, UpdateInfo, Provider, ResolvedUpdateFileInfo, AppUpdater, CancellationToken, ProgressInfo } from 'electron-updater'
-import type { CustomPublishOptions as BaseCustomPublishOptions } from 'builder-util-runtime'
-import yaml from 'js-yaml'
-import { Autowired, Injectable } from '@opensumi/di'
-import { Emitter } from '@opensumi/ide-core-common'
-import { ILogService } from '@/logger/common'
-import { StorageService } from '@/core/electron-main'
-import { IProduct } from '@/core/common'
-import { UpdateState, EventData } from '../common'
+import { Autowired, Injectable } from "@opensumi/di";
+import { Emitter } from "@opensumi/ide-core-common";
+import { autoUpdater, CancellationToken, Provider } from "electron-updater";
+import yaml from "js-yaml";
+
+import type { EventData } from "../common";
+import { UpdateState } from "../common";
+import { IProduct } from "@/core/common";
+import { StorageService } from "@/core/electron-main";
+import { ILogService } from "@/logger/common";
+import type { CustomPublishOptions as BaseCustomPublishOptions } from "builder-util-runtime";
+import type {
+  AppUpdater,
+  ProgressInfo,
+  ResolvedUpdateFileInfo,
+  UpdateInfo,
+} from "electron-updater";
 
 interface CustomPublishOptions extends BaseCustomPublishOptions {
-  readonly configUrl: string
+  readonly configUrl: string;
 }
 
 interface AutoUpdateConfig {
@@ -24,190 +32,226 @@ export class CustomProvider extends Provider<UpdateInfo> {
   constructor(
     private readonly configuration: CustomPublishOptions,
     private readonly updater: AppUpdater,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     runtimeOptions: any,
   ) {
-    super(runtimeOptions)
+    super(runtimeOptions);
   }
 
   private get channel(): string {
-    const result = this.updater.channel || this.configuration.channel
-    return result == null ? this.getDefaultChannelName() : this.getCustomChannelName(result)
+    const result = this.updater.channel || this.configuration.channel;
+    return result == null
+      ? this.getDefaultChannelName()
+      : this.getCustomChannelName(result);
   }
 
   async getLatestVersion(): Promise<UpdateInfo> {
-    const channelFile = `${this.channel}.yml`
+    const channelFile = `${this.channel}.yml`;
     for (let attemptNumber = 0; ; attemptNumber++) {
       try {
-        const rawData = await this.httpRequest(new URL(this.configuration.configUrl))
+        const rawData = await this.httpRequest(
+          new URL(this.configuration.configUrl),
+        );
         if (!rawData) {
-          throw new Error(`Cannot get update config (${this.configuration.configUrl}): rawData: null`)
+          throw new Error(
+            `Cannot get update config (${this.configuration.configUrl}): rawData: null`,
+          );
         }
-        let config: AutoUpdateConfig[]
+        let config: AutoUpdateConfig[];
         try {
-          config = JSON.parse(rawData)
+          config = JSON.parse(rawData);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-          throw new Error(`Cannot parse update config (${this.configuration.configUrl}): ${err.stack || err.message}, rawData: ${rawData}`)
+          throw new Error(
+            `Cannot parse update config (${this.configuration.configUrl}): ${err.stack || err.message}, rawData: ${rawData}`,
+          );
         }
-        const channelConfig = config.find(item => item.channel === this.channel)
+        const channelConfig = config.find(
+          (item) => item.channel === this.channel,
+        );
         if (!channelConfig) {
-          throw new Error(`Cannot find chanel config (${this.configuration.configUrl}), rawData: ${rawData}`)
+          throw new Error(
+            `Cannot find chanel config (${this.configuration.configUrl}), rawData: ${rawData}`,
+          );
         }
         const { channelUrl, stagingPercentage, releaseNote } = channelConfig;
-        const channelRawData = await this.httpRequest(new URL(channelUrl))
+        const channelRawData = await this.httpRequest(new URL(channelUrl));
         if (!channelRawData) {
-          throw new Error(`Cannot get channel info (${channelUrl}): rawData: null`)
+          throw new Error(
+            `Cannot get channel info (${channelUrl}): rawData: null`,
+          );
         }
-        let updateInfo: UpdateInfo
+        let updateInfo: UpdateInfo;
         try {
-          updateInfo = yaml.load(channelRawData) as UpdateInfo
+          updateInfo = yaml.load(channelRawData) as UpdateInfo;
           Object.assign(updateInfo, {
             stagingPercentage,
             releaseNotes: releaseNote,
-          })
+          });
         } catch (err) {
-          throw new Error(`Cannot prase channel info (${channelUrl}): rawData: ${channelRawData}`)
+          throw new Error(
+            `Cannot prase channel info (${channelUrl}): rawData: ${channelRawData}`,
+          );
         }
-        return updateInfo
+        return updateInfo;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        if ('statusCode' in e && e.statusCode === 404) {
-          throw new Error(`Cannot request channel "${channelFile}" update info: ${e.stack || e.message}`)
+        if ("statusCode" in e && e.statusCode === 404) {
+          throw new Error(
+            `Cannot request channel "${channelFile}" update info: ${e.stack || e.message}`,
+          );
         } else if (e.code === "ECONNREFUSED") {
           if (attemptNumber < 3) {
             await new Promise((resolve, reject) => {
               try {
-                setTimeout(resolve, 1000 * attemptNumber)
+                setTimeout(resolve, 1000 * attemptNumber);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } catch (e: any) {
-                reject(e)
+                reject(e);
               }
-            })
-            continue
+            });
+            continue;
           }
         }
-        throw e
+        throw e;
       }
     }
   }
 
   resolveFiles(updateInfo: UpdateInfo): Array<ResolvedUpdateFileInfo> {
-    return updateInfo.files.map(info => ({
+    return updateInfo.files.map((info) => ({
       url: new URL(info.url),
       info,
-    }))
+    }));
   }
 }
 
 @Injectable()
 export class AutoUpdaterService {
   @Autowired(StorageService)
-  storageService: StorageService
+  storageService: StorageService;
 
   @Autowired(ILogService)
-  logger: ILogService
+  logger: ILogService;
 
   @Autowired(IProduct)
-  product: IProduct
+  product: IProduct;
 
   #initialized = false;
 
-  #updateState = UpdateState.NoAvailable
-  get updateState() { return this.#updateState }
-
+  #updateState = UpdateState.NoAvailable;
   #updateInfo: UpdateInfo | null = null;
-  get updateInfo() { return this.#updateInfo }
-
-  #cancellationToken: CancellationToken | null
-
+  #cancellationToken: CancellationToken | null;
   #progressInfo: ProgressInfo | null = null;
-  get progressInfo() { return this.#progressInfo }
+  #updateEmitter = new Emitter<EventData>();
+  #ignoreVersions = new Set<string>();
 
-  #updateEmitter = new Emitter<EventData>()
-  get updateEvent() { return this.#updateEmitter.event }
-
-  #ignoreVersions = new Set<string>()
-  get ignoreVersion() { return this.#ignoreVersions }
-
-  init() {
-    if (this.#initialized) return
-    this.#initialized = true
-    autoUpdater.autoDownload = false
-    autoUpdater.disableDifferentialDownload = true
-    autoUpdater.logger = this.logger;
-    autoUpdater.setFeedURL({
-      provider: 'custom',
-      updateProvider: CustomProvider,
-      configUrl: this.storageService.getItem('autoUpdaterConfigUrl') || this.product.autoUpdaterConfigUrl,
-    } as CustomPublishOptions)
-    this.logger.info('[auto-updater] init')
-    this.registerAutoUpdaterListener()
-    let ignoreVersions = this.storageService.getItem('ignoreUpdateVersions')
-    if (Array.isArray(ignoreVersions)) {
-      this.#ignoreVersions = new Set(ignoreVersions)
-    }
+  get updateState() {
+    return this.#updateState;
   }
 
-  private registerAutoUpdaterListener() {
-    autoUpdater
-      .on('checking-for-update', () => {
-        this.logger.debug('[auto-updater] checking-for-update')
-        this.#updateState = UpdateState.Checking
-      })
-      .on('update-not-available', (info: UpdateInfo) => {
-        this.logger.debug('[auto-updater] update-not-available', info)
-        this.#updateState = UpdateState.NoAvailable
-      })
-      .on('update-available', (info: UpdateInfo) => {
-        this.logger.debug('[auto-updater] update-available', info)
-        this.#updateState = UpdateState.Available
-        this.#updateInfo = info;
-      })
-      .on('download-progress', (info: ProgressInfo) => {
-        this.#updateState = UpdateState.Downloading
-        this.#progressInfo = info;
-        this.#updateEmitter.fire({
-          event: 'download-progress',
-          data: info,
-        })
-      })
-      .on('update-downloaded', () => {
-        this.#updateState = UpdateState.Downloaded
-        autoUpdater.quitAndInstall()
-      })
-      .on('error', (err) => {
-        this.#updateState = UpdateState.UpdateError
-        this.#updateEmitter.fire({
-          event: 'error',
-          data: err?.message,
-        })
-      })
+  get updateInfo() {
+    return this.#updateInfo;
+  }
+
+  get progressInfo() {
+    return this.#progressInfo;
+  }
+
+  get updateEvent() {
+    return this.#updateEmitter.event;
+  }
+
+  get ignoreVersion() {
+    return this.#ignoreVersions;
+  }
+
+  init() {
+    if (this.#initialized) return;
+    this.#initialized = true;
+    autoUpdater.autoDownload = false;
+    autoUpdater.disableDifferentialDownload = true;
+    autoUpdater.logger = this.logger;
+    autoUpdater.setFeedURL({
+      provider: "custom",
+      updateProvider: CustomProvider,
+      configUrl:
+        this.storageService.getItem("autoUpdaterConfigUrl") ||
+        this.product.autoUpdaterConfigUrl,
+    } as CustomPublishOptions);
+    this.logger.info("[auto-updater] init");
+    this.registerAutoUpdaterListener();
+    const ignoreVersions = this.storageService.getItem("ignoreUpdateVersions");
+    if (Array.isArray(ignoreVersions)) {
+      this.#ignoreVersions = new Set(ignoreVersions);
+    }
   }
 
   async checkForUpdates() {
     this.init();
     try {
-      await autoUpdater.checkForUpdates()
+      await autoUpdater.checkForUpdates();
     } catch (err) {
-      this.#updateState = UpdateState.CheckingError
-      this.logger.error(`[auto-updater] checkForUpdates error: ${err}`)
-      return null
+      this.#updateState = UpdateState.CheckingError;
+      this.logger.error(`[auto-updater] checkForUpdates error: ${err}`);
+      return null;
     }
   }
 
   async downloadUpdate() {
-    this.#cancellationToken?.dispose()
-    this.#cancellationToken = new CancellationToken()
+    this.#cancellationToken?.dispose();
+    this.#cancellationToken = new CancellationToken();
     try {
-      await autoUpdater.downloadUpdate(this.#cancellationToken)
+      await autoUpdater.downloadUpdate(this.#cancellationToken);
     } catch (err) {
-      this.#updateState = UpdateState.DownloadError
-      console.error('[autoUpdater] downloadUpdate error')
-      throw err
+      this.#updateState = UpdateState.DownloadError;
+      console.error("[autoUpdater] downloadUpdate error");
+      throw err;
     }
   }
 
   updateIgnoreVersion() {
     if (this.#updateInfo) {
-      this.#ignoreVersions.add(this.#updateInfo.version)
-      this.storageService.setItem('ignoreUpdateVersions', [...this.#ignoreVersions])
+      this.#ignoreVersions.add(this.#updateInfo.version);
+      this.storageService.setItem("ignoreUpdateVersions", [
+        ...this.#ignoreVersions,
+      ]);
     }
+  }
+
+  private registerAutoUpdaterListener() {
+    autoUpdater
+      .on("checking-for-update", () => {
+        this.logger.debug("[auto-updater] checking-for-update");
+        this.#updateState = UpdateState.Checking;
+      })
+      .on("update-not-available", (info: UpdateInfo) => {
+        this.logger.debug("[auto-updater] update-not-available", info);
+        this.#updateState = UpdateState.NoAvailable;
+      })
+      .on("update-available", (info: UpdateInfo) => {
+        this.logger.debug("[auto-updater] update-available", info);
+        this.#updateState = UpdateState.Available;
+        this.#updateInfo = info;
+      })
+      .on("download-progress", (info: ProgressInfo) => {
+        this.#updateState = UpdateState.Downloading;
+        this.#progressInfo = info;
+        this.#updateEmitter.fire({
+          event: "download-progress",
+          data: info,
+        });
+      })
+      .on("update-downloaded", () => {
+        this.#updateState = UpdateState.Downloaded;
+        autoUpdater.quitAndInstall();
+      })
+      .on("error", (err) => {
+        this.#updateState = UpdateState.UpdateError;
+        this.#updateEmitter.fire({
+          event: "error",
+          data: err?.message,
+        });
+      });
   }
 }

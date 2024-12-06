@@ -1,7 +1,11 @@
-import { Configuration, DefinePlugin } from 'webpack'
+
 import path from 'node:path'
+
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import { DefinePlugin } from 'webpack'
 import { merge } from 'webpack-merge'
+
+import type { Configuration} from 'webpack';
 
 export const webpackDir = path.resolve('out')
 

@@ -1,9 +1,12 @@
-import { app } from 'electron'
 import * as os from 'node:os'
 import * as path from 'node:path'
+
 import { Injectable, Autowired } from '@opensumi/di'
 import { memoize } from '@opensumi/ide-core-common'
-import { IEnvironmentService, IProduct } from '../common'
+import { app } from 'electron'
+
+import type { IEnvironmentService} from '../common';
+import { IProduct } from '../common'
 
 @Injectable()
 export class EnvironmentService implements IEnvironmentService {
