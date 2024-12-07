@@ -1,11 +1,11 @@
 import '@opensumi/ide-i18n/lib/browser';
-import { ExpressFileServerModule } from '@opensumi/ide-express-file-server/lib/browser';
+import {ExpressFileServerModule} from '@opensumi/ide-express-file-server/lib/browser';
 import '@opensumi/ide-core-browser/lib/style/index.less';
 import '@opensumi/ide-core-browser/lib/style/icon.less';
 
-import { renderApp } from './render-app';
-import { CommonBrowserModules } from '../../../src/web/browser/common-modules';
-import { layoutConfig } from './layout-config';
+import {renderApp} from './render-app';
+import {CommonBrowserModules} from '@/bootstrap-web/browser/common-modules';
+import {layoutConfig} from './layout-config';
 import './main.less';
 import './styles.less';
 import {AILayout} from "@opensumi/ide-ai-native/lib/browser/layout/ai-layout";

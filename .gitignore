@@ -81,7 +81,7 @@ jspm_packages/
 dist
 lib
 out
-dist-node
+out-web
 .vscode/*
 !.vscode/launch.json
 

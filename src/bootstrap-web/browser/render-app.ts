@@ -1,9 +1,9 @@
-import { Injector } from '@opensumi/di';
-import { IClientAppOpts } from '@opensumi/ide-core-browser';
-import { ClientApp } from '@opensumi/ide-core-browser/lib/bootstrap/app';
-import { ToolbarActionBasedLayout } from '@opensumi/ide-core-browser/lib/components';
+import {Injector} from '@opensumi/di';
+import {IClientAppOpts} from '@opensumi/ide-core-browser';
+import {ClientApp} from '@opensumi/ide-core-browser/lib/bootstrap/app';
+import {ToolbarActionBasedLayout} from '@opensumi/ide-core-browser/lib/components';
 import logo from '@/core/browser/assets/logo.svg'
-import {CoreCommandContribution} from "@/web/browser/core-commands";
+import {CoreCommandContribution} from "@/bootstrap-web/browser/core-commands";
 
 export async function renderApp(opts: IClientAppOpts) {
   const injector = new Injector();
@@ -19,7 +19,9 @@ export async function renderApp(opts: IClientAppOpts) {
   opts.workspaceDir = opts.workspaceDir || query.get('workspaceDir') || process.env.WORKSPACE_DIR;
 
   opts.extensionDir = opts.extensionDir || process.env.EXTENSION_DIR;
-  opts.wsPath = process.env.WS_PATH || window.location.protocol == 'https:' ? `wss://${hostname}:${serverPort}` : `ws://${hostname}:${serverPort}`;
+
+  opts.wsPath = process.env.WS_PATH || (window.location.protocol == 'https:' ? `wss://${hostname}:${serverPort}` : `ws://${hostname}:${serverPort}`);
+  console.log(opts.wsPath)
   opts.extWorkerHost = opts.extWorkerHost || process.env.EXTENSION_WORKER_HOST || `http://${hostname}:${staticServerPort}/ext-host/worker-host.js`;
   opts.staticServicePath = `http://${hostname}:${serverPort}`;
   const anotherHostName = process.env.WEBVIEW_HOST || hostname;
@@ -33,7 +35,6 @@ export async function renderApp(opts: IClientAppOpts) {
     }
   }
   const app = new ClientApp(opts);
-
 
   app.fireOnReload = () => {
     window.location.reload();
