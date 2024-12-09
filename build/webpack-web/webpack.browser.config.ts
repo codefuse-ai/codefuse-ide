@@ -5,14 +5,14 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import NodePolyfillPlugin from "node-polyfill-webpack-plugin"
 import {DefinePlugin} from 'webpack'
 import fs from 'fs'
-import { createConfig, webpackDir, devServerPort, codeWindowName } from './webpack.base.config';
+import { createConfig, webpackDir, devServerPort } from './webpack.base.config';
 import {config} from 'dotenv'
 config({
   path: path.join(__dirname, '../../.env')
 })
 
 const srcDir = path.resolve('src/bootstrap-web/browser');
-const outDir = path.resolve(webpackDir, 'renderer');
+const outDir = path.resolve(webpackDir);
 const publicDir = path.join(__dirname, '../../public');
 
 
@@ -23,9 +23,7 @@ export default createConfig((_env, argv) => {
   const styleLoader = argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader'
 
   return {
-    entry: {
-      [codeWindowName]: path.resolve(srcDir, 'index.ts'),
-    },
+    entry: path.resolve(srcDir, 'index.ts'),
     output: {
       filename: '[name]/index.js',
       path: outDir,
@@ -136,8 +134,6 @@ export default createConfig((_env, argv) => {
       }),
       new HtmlWebpackPlugin({
         template: path.join(publicDir, 'index.html'),
-        filename: `${codeWindowName}/index.html`,
-        chunks: [codeWindowName]
       }),
       ...(argv.mode === 'production' ? [
         new MiniCssExtractPlugin({
@@ -149,7 +145,7 @@ export default createConfig((_env, argv) => {
         patterns: [
           {
             from: require.resolve('@opensumi/ide-monaco/worker/editor.worker.bundle.js'),
-            to: path.join(outDir, codeWindowName, 'editor.worker.bundle.js'),
+            to: path.join(outDir, 'editor.worker.bundle.js'),
           },
         ],
       }),

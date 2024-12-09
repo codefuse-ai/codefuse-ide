@@ -1,3 +1,5 @@
+import {webpackDir} from "./webpack.base.config";
+
 const path = require('path');
 const entry = require.resolve('@opensumi/ide-webview/lib/webview-host/web-preload.js');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
@@ -5,7 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 const tsConfigPath = path.join(__dirname, '../../tsconfig.json');
-const distDir = path.join(__dirname, '../../out/webview');
+const distDir = path.join(webpackDir, 'webview');
 const port = 8899;
 
 module.exports = {
@@ -63,7 +65,7 @@ module.exports = {
   ],
   devServer: {
     static: {
-      directory: path.join(__dirname , '../../out')
+      directory: path.join(__dirname , webpackDir)
     },
     allowedHosts: 'all',
     port,

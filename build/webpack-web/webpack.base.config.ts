@@ -3,7 +3,7 @@ import path from 'node:path'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import { merge } from 'webpack-merge'
 
-export const webpackDir = path.resolve(path.join(__dirname,'..','..', 'out-web'))
+export const webpackDir = path.resolve(path.join(__dirname,'..','..', 'out'))
 
 export const devServerPort = 8080
 
