@@ -4066,7 +4066,7 @@ __metadata:
     "@parcel/watcher":
       built: false
     "@vscode/spdlog":
-      built: true
+      built: false
     keytar:
       built: false
     node-pty:

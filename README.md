@@ -49,6 +49,8 @@ yarn run start
 yarn
 # rebuild native dependencies for electron
 yarn run electron-rebuild
+# build web
+yarn run build-web
 # start project
 yarn run start-web
 ```

@@ -11,16 +11,8 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "standard-version",
     "release:minor": "npm run release -- --release-as minor",
-    "build-web": "run-p build:client build:webview build:ext-host build:worker-host build:server",
-    "build:client": "webpack --config ./build/webpack-web/webpack.browser.config.ts --progress --color",
-    "build:webview": "webpack --config ./build/webpack-web/webpack.webview.config.ts --progress --color",
-    "build:server": "webpack --config ./build/webpack-web/webpack.node.config.ts --progress --color",
-    "build:ext-host": "webpack --config ./build/webpack-web/webpack.ext-host.config.ts --progress --color",
-    "build:worker-host": "webpack --config ./build/webpack-web/webpack.worker-host.config.ts --progress --color",
-    "start-web": "run-p start:client start:server start:webview",
-    "start:client": "cross-env NODE_ENV=development WEBPACK_LOG_LEVEL=info webpack-dev-server --client-logging info --config ./build/webpack-web/webpack.browser.config.ts --progress --color",
-    "start:webview": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack-web/webpack.webview.config.ts --progress --color",
-    "start:server": "cross-env NODE_ENV=development node -r ts-node/register -r tsconfig-paths/register src/bootstrap-web/node/index.ts"
+    "build-web": "webpack --config ./build/webpack-web/webpack.browser.config.ts --progress --color && webpack --config ./build/webpack-web/webpack.webview.config.ts --progress --color && webpack --config ./build/webpack-web/webpack.ext-host.config.ts --progress --color && webpack --config ./build/webpack-web/webpack.worker-host.config.ts --progress --color && webpack --config ./build/webpack-web/webpack.node.config.ts --progress --color",
+    "start-web": "ts-node build/webpack-web/web-start.ts"
   },
   "repository": {
     "type": "git",
