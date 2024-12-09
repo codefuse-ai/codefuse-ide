@@ -463,16 +463,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-forge/web-multi-logger@npm:^7.5.0":
-  version: 7.5.0
-  resolution: "@electron-forge/web-multi-logger@npm:7.5.0"
+"@electron-forge/web-multi-logger@npm:^7.6.0":
+  version: 7.6.0
+  resolution: "@electron-forge/web-multi-logger@npm:7.6.0"
   dependencies:
     express: "npm:^4.17.1"
     express-ws: "npm:^5.0.2"
     xterm: "npm:^4.9.0"
     xterm-addon-fit: "npm:^0.5.0"
     xterm-addon-search: "npm:^0.8.0"
-  checksum: 10/06c4c941bc1214657ed40cc59b08953c15d67bb91d786c22ce5c7e2ad1fcfa6b38b922281feb91b4817ebb0157132568d7925b8587049dfe99e94c2a4ed06ab4
+  checksum: 10/0892bdec707e2a9506b687bf5c42f05eaff04b9d66a3fb42f01af0653b08376b8365b9eb97d7897fbee73d5c43d4ef663f255c03ce7642e6f6cd13e707af6c72
   languageName: node
   linkType: hard
 
@@ -3653,7 +3653,7 @@ __metadata:
     "@electron-forge/plugin-base": "npm:^7.4.0"
     "@electron-forge/plugin-webpack": "npm:^7.4.0"
     "@electron-forge/shared-types": "npm:^7.4.0"
-    "@electron-forge/web-multi-logger": "npm:^7.5.0"
+    "@electron-forge/web-multi-logger": "npm:^7.6.0"
     "@opensumi/ide-addons": "npm:3.6.0"
     "@opensumi/ide-ai-native": "npm:3.6.0"
     "@opensumi/ide-comments": "npm:3.6.0"
