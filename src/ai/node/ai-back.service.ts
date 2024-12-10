@@ -78,7 +78,7 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
     try {
       const data = await response.json() as ChatCompletion
       const content = data?.choices?.[0]?.message?.content;
-  
+
       return {
         errorCode: 0,
         data: content,
@@ -107,7 +107,7 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
       ] : []),
       { role: ChatCompletionRequestMessageRoleEnum.User, content: input }
     ]
-  
+
     const response = await this.fetchModel(
       this.getCompletionUrl(config.baseUrl),
       {
@@ -184,7 +184,7 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
 
     return readableSteam;
   }
-  
+
   async requestCompletion(input: IAICompletionOption, cancelToken?: CancellationToken) {
     const config = this.checkConfig(true)
     if (!config) {
@@ -280,7 +280,7 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
       controller.abort();
     });
 
-    return (fetch as typeof FetchType)(
+    return fetch(
       url,
       {
         signal,
@@ -293,7 +293,7 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
         },
         body: JSON.stringify(body),
       },
-    );
+    ) as unknown as Promise<Response>;
   }
 
   private getCompletionUrl(baseUrl: string, supportFim = false) {

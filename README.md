@@ -43,6 +43,18 @@ yarn run electron-rebuild
 yarn run start
 ```
 
+### Start the project (web)
+```bash
+# install dependencies
+yarn
+# rebuild native dependencies for electron
+yarn run electron-rebuild
+# build web
+yarn run build-web
+# start project
+yarn run start-web
+```
+
 ## Links
 
 - **CodeFuse**: https://codefuse.ai
