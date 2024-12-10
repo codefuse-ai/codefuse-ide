@@ -27,7 +27,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/cli": "^7.5.0",
     "@electron-forge/maker-squirrel": "^7.5.0",
     "@electron-forge/maker-zip": "^7.4.0",
     "@electron-forge/plugin-base": "^7.4.0",
@@ -41,7 +41,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.1",
     "app-builder-bin": "^4.2.0",
-    "app-builder-lib": "24.13.3",
+    "app-builder-lib": "25.1.8",
     "asar": "^3.2.0",
     "chalk": "^4.0.0",
     "conventional-changelog-cli": "^5.0.0",
