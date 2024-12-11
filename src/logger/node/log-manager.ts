@@ -10,6 +10,6 @@ export class LogServiceManager extends AbstractLogServiceManager {
   }
 
   getLogFolder(): string {
-    return path.join(process.env.IDE_LOG_HOME!, `window${process.env.CODE_WINDOW_CLIENT_ID!.slice('CODE_WINDOW_CLIENT_ID:'.length)}`)
+    return path.join(process.env.IDE_LOG_HOME || '', `window${process.env.CODE_WINDOW_CLIENT_ID?.slice('CODE_WINDOW_CLIENT_ID:'?.length)}`)
   }
 }

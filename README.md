@@ -47,8 +47,8 @@ yarn run start
 ```bash
 # install dependencies
 yarn
-# rebuild native dependencies for electron
-yarn run electron-rebuild
+# rebuild native dependencies for web
+yarn run web-rebuild
 # build web
 yarn run build-web
 # start project

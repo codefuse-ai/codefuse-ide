@@ -10,7 +10,7 @@ const tsConfigPath = path.join(__dirname, '../../tsconfig.json');
 const distDir = path.join(webpackDir, 'webview');
 const port = 8899;
 
-module.exports = {
+export default {
   entry,
   output: {
     filename: 'webview.js',
