@@ -2,8 +2,12 @@ import * as path from 'node:path';
 import { version as electronVersion } from 'electron/package.json'
 import { nativeDeps, postInstallDeps } from './deps'
 import { exec } from './util'
+import { parseArgv } from '@opensumi/ide-utils/lib/argv'
+
+const argv = parseArgv(process.argv)
 
 export const rebuild = async (config?: { arch?: string, cwd?: string, silent?: boolean, loglevel?: string }) => {
+  const target = argv.target || 'electron'
   const arch = config?.arch || process.arch
   const cwd = config?.cwd || process.cwd()
   const loglevel = config?.loglevel || 'info'
@@ -15,11 +19,13 @@ export const rebuild = async (config?: { arch?: string, cwd?: string, silent?: b
         'npx',
         'node-gyp',
         'rebuild',
-        '--runtime=electron',
-        `--target=${electronVersion}`,
-        `--arch=${arch}`,
-        `--dist-url=https://electronjs.org/headers`,
-        `--loglevel=${loglevel}`
+        ...target == 'electron' ? [
+          '--runtime=electron',
+          `--target=${electronVersion}`,
+          `--arch=${arch}`,
+          `--dist-url=https://electronjs.org/headers`,
+          `--loglevel=${loglevel}`
+        ] : []
       ].join(' '),
       null,
       {

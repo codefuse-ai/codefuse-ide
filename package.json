@@ -5,14 +5,15 @@
   "main": "out/main",
   "scripts": {
     "start": "electron-forge start",
+    "start-web": "ts-node build/webpack-web/web-start.ts",
+    "electron-rebuild": "node -r ts-node/register ./build/rebuild.ts",
+    "web-rebuild": "node -r ts-node/register ./build/rebuild.ts --target=web",
+    "build-web": "webpack --config ./build/webpack-web/webpack.config.ts --progress --color",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "electron-rebuild": "node -r ts-node/register ./build/rebuild.ts",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "standard-version",
-    "release:minor": "npm run release -- --release-as minor",
-    "build-web": "webpack --config ./build/webpack-web/webpack.browser.config.ts --progress --color && webpack --config ./build/webpack-web/webpack.webview.config.ts --progress --color && webpack --config ./build/webpack-web/webpack.ext-host.config.ts --progress --color && webpack --config ./build/webpack-web/webpack.worker-host.config.ts --progress --color && webpack --config ./build/webpack-web/webpack.node.config.ts --progress --color",
-    "start-web": "ts-node build/webpack-web/web-start.ts"
+    "release:minor": "npm run release -- --release-as minor"
   },
   "repository": {
     "type": "git",

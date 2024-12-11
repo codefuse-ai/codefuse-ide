@@ -8,7 +8,7 @@ import fs from 'fs'
 import { createConfig, webpackDir, devServerPort } from './webpack.base.config';
 import {config} from 'dotenv'
 config({
-  path: path.join(__dirname, '../../.env')
+  path: path.join(__dirname, '../../.env.sample')
 })
 
 const srcDir = path.resolve('src/bootstrap-web/browser');

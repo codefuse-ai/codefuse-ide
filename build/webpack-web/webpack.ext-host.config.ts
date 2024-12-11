@@ -5,7 +5,7 @@ import { asarDeps } from '../deps'
 const srcDir = path.resolve('src/bootstrap-web/ext-host');
 const outDir = path.join(webpackDir, 'ext-host');
 
-module.exports = createConfig((_, argv) => ({
+export default createConfig((_, argv) => ({
   entry: srcDir,
   output: {
     filename: 'index.js',

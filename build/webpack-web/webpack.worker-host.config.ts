@@ -4,7 +4,7 @@ import {webpackDir} from "./webpack.base.config";
 import {createConfig} from "../webpack/webpack.base.config";
 const outDir = path.join(webpackDir, 'ext-host');
 
-module.exports = createConfig({
+export default createConfig({
     entry: require.resolve('@opensumi/ide-extension/lib/hosted/worker.host-preload'),
     output: {
         filename: 'worker-host.js',
