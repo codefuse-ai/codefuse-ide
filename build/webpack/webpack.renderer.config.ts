@@ -126,6 +126,10 @@ export default createConfig((_env, argv) => {
             from: require.resolve('@opensumi/ide-monaco/worker/editor.worker.bundle.js'),
             to: path.join(outDir, codeWindowName, 'editor.worker.bundle.js'),
           },
+          {
+            from: require.resolve('tiktoken/tiktoken_bg.wasm'),
+            to: path.join(outDir, codeWindowName, 'tiktoken_bg.wasm'),
+          },
         ],
       }),
     ],
