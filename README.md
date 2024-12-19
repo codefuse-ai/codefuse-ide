@@ -43,7 +43,7 @@ yarn run electron-rebuild
 yarn run start
 ```
 
-### Start the project (web)
+### Start the web project (experimental)
 ```bash
 # install dependencies
 yarn
@@ -51,7 +51,7 @@ yarn
 yarn run web-rebuild
 # build web
 yarn run build-web
-# start project
+# start project, visit 127.0.0.1:8080
 yarn run start-web
 ```
 
