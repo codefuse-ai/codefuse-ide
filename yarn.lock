@@ -3689,6 +3689,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chalk@npm:^5.4.1":
+  version: 5.4.1
+  resolution: "chalk@npm:5.4.1"
+  checksum: 10/29df3ffcdf25656fed6e95962e2ef86d14dfe03cd50e7074b06bad9ffbbf6089adbb40f75c00744d843685c8d008adaf3aed31476780312553caf07fa86e5bc7
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:^3.5.3, chokidar@npm:^3.6.0":
   version: 3.6.0
   resolution: "chokidar@npm:3.6.0"
@@ -3979,7 +3986,7 @@ __metadata:
     app-builder-lib: "npm:25.1.8"
     asar: "npm:^3.2.0"
     buffer: "npm:^6.0.3"
-    chalk: "npm:^4.0.0"
+    chalk: "npm:^5.4.1"
     conventional-changelog-cli: "npm:^5.0.0"
     copy-webpack-plugin: "npm:^12.0.2"
     cross-env: "npm:^7.0.3"
