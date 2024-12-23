@@ -92,7 +92,7 @@
     "@opensumi/ide-decoration": "3.6.3",
     "@opensumi/ide-design": "3.6.3",
     "@opensumi/ide-editor": "3.6.3",
-    "@opensumi/ide-electron-basic": "3.6.3",
+    "@opensumi/ide-electron-basic": "3.6.4",
     "@opensumi/ide-explorer": "3.6.3",
     "@opensumi/ide-express-file-server": "3.6.3",
     "@opensumi/ide-extension": "3.6.3",
