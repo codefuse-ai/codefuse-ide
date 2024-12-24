@@ -175,6 +175,9 @@ async function renderApp() {
       [AINativeSettingSectionsId.IntelligentCompletionsPromptEngineeringEnabled]: false,
       // 总是显示智能提示
       [AINativeSettingSectionsId.IntelligentCompletionsAlwaysVisible]: true,
+      // 开启 Code Edits
+      [AINativeSettingSectionsId.CodeEditsLintErrors]: true,
+      [AINativeSettingSectionsId.CodeEditsLineChange]: true,
     },
     onigWasmUri: URI.file(electronEnv.onigWasmPath).toString(true),
     treeSitterWasmDirectoryUri: URI.file(electronEnv.treeSitterWasmDirectoryPath).toString(true),
@@ -182,7 +185,7 @@ async function renderApp() {
       layout: {
         menubarLogo: logo,
       }
-    }
+    },
   }
 
   const app = new ClientApp(opts);
