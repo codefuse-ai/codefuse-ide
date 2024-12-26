@@ -4,7 +4,7 @@
     "vscode": [
       {
         "name": "typescript-language-features",
-        "version": "1.60.0"
+        "version": "1.95.3"
       },
       {
         "name": "bat",
@@ -20,7 +20,7 @@
       },
       {
         "name": "configuration-editing",
-        "version": "1.55.2"
+        "version": "1.88.1"
       },
       {
         "name": "cpp",
@@ -39,16 +39,12 @@
         "version": "1.88.1"
       },
       {
-        "name": "debug-auto-launch",
-        "version": "1.55.2"
-      },
-      {
         "name": "docker",
         "version": "1.55.2"
       },
       {
         "name": "emmet",
-        "version": "1.55.2"
+        "version": "1.88.1"
       },
       {
         "name": "fsharp",
@@ -200,7 +196,7 @@
       },
       {
         "name": "swift",
-        "version": "1.55.2"
+        "version": "1.88.1"
       },
       {
         "name": "theme-abyss",
@@ -274,7 +270,7 @@
     "ms-vscode": [
       {
         "name": "js-debug",
-        "version": "1.68.0"
+        "version": "1.95.3"
       }
     ],
     "vscode-icons-team": [
