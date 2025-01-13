@@ -3985,7 +3985,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     css-loader: "npm:^6"
     debug: "npm:^4.3.7"
-    electron: "npm:30.1.2"
+    electron: "npm:33.3.1"
     electron-updater: "npm:6.3.9"
     extract-zip: "npm:^2.0.1"
     fast-glob: "npm:^3.3.2"
@@ -5572,16 +5572,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:30.1.2":
-  version: 30.1.2
-  resolution: "electron@npm:30.1.2"
+"electron@npm:33.3.1":
+  version: 33.3.1
+  resolution: "electron@npm:33.3.1"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10/ab8a67ac4a318aa8a1751d561b070007001398c642f98ebf41ce98e37b4b38e0ae80c7cb5bda1603c889433235f2e0176136e4d3b0ce177ebd9d1ba79f12cdc4
+  checksum: 10/c50cf0afa5fe79946d397c6e9d390d2fff0eec29a9bd8c0cb92ae237021bc93ceabfb3351b2f82465fd88256d2c234e00af13e8763854e51e5a39f6bb74078ba
   languageName: node
   linkType: hard
 
