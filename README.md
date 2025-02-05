@@ -51,7 +51,7 @@ yarn
 yarn run web-rebuild
 # build web
 yarn run build-web
-# start project, visit 127.0.0.1:8080
+# start project, visit http://localhost:8080 or http://localhost:8080/?workspaceDir=workspace_dir
 yarn run start-web
 ```
 
