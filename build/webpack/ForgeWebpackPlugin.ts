@@ -15,6 +15,7 @@ import mainConfig from './webpack.main.config'
 import rendererConfig from './webpack.renderer.config'
 import nodeConfig from './webpack.node.config'
 import { extHostConfig, workerHostConfig } from './webpack.ext-host.config'
+import { watcherHostConfig } from './webpack.watcher-host.config'
 import webviewConfig from './webpack.webview.config'
 
 const d = debug('electron-forge:plugin:webpack');
@@ -140,6 +141,16 @@ export class WebpackPlugin extends PluginBase<WebpackPluginConfig> {
           task: async () => {
             const tab = logger.createTab('Worker Host')
             await this.compile(workerHostConfig, 'ext-host', 'worker-host', false, tab)
+          },
+          rendererOptions: {
+            timer: { ...PRESET_TIMER },
+          },
+        },
+        {
+          title: 'Compiling wathcer host code',
+          task: async () => {
+            const tab = logger.createTab('Watcher Host')
+            await this.compile(watcherHostConfig, 'watcher-host', 'watcher-host', false, tab)
           },
           rendererOptions: {
             timer: { ...PRESET_TIMER },
