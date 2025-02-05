@@ -1,6 +1,7 @@
 
 import '@/core/common/asar'
 import * as net from 'node:net';
+import path from 'node:path';
 import mri from 'mri'
 import { IServerAppOpts, ServerApp, ConstructorOf, NodeModule } from '@opensumi/ide-core-node';
 import { ServerCommonModule } from '@opensumi/ide-core-node';
@@ -49,6 +50,7 @@ async function startServer() {
       showBuiltinExtensions: true,
       extensionDir: process.env.IDE_EXTENSIONS_PATH!,
     },
+    watcherHost: path.join(__dirname, '../watcher-host/index'),
   };
 
   const server = net.createServer();
