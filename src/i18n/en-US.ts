@@ -13,7 +13,7 @@ export const localizationBundle = {
     'custom.terminal_panel': 'Switch to Terminal Panel',
     'custom.search_panel': 'Switch to Search Panel',
 
-    'preference.ai.model.title': 'Model',
+    'preference.ai.model.title': 'Completion Model',
     'preference.ai.model.baseUrl': 'Base URL',
     'preference.ai.model.api_key': 'API Key',
     'preference.ai.model.chat': 'Chat Completions',

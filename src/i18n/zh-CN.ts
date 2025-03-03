@@ -13,7 +13,7 @@ export const localizationBundle = {
     'custom.terminal_panel': '切换终端',
     'custom.search_panel': '切换搜索面板',
 
-    'preference.ai.model.title': '模型配置',
+    'preference.ai.model.title': '补全模型配置',
     'preference.ai.model.baseUrl': 'API URL 前缀',
     'preference.ai.model.apiKey': 'API Key',
     'preference.ai.model.chat': '对话补全',

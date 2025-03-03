@@ -184,6 +184,10 @@ async function renderApp() {
     AINativeConfig: {
       layout: {
         menubarLogo: logo,
+      },
+      capabilities: {
+        supportsMCP: true,
+        supportsCustomLLMSettings: true,
       }
     },
   }
