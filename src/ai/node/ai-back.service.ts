@@ -70,7 +70,7 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
       this.getCompletionUrl(config.baseUrl, !config.codeFimTemplate),
       {
         stream: false,
-        model: config.codeModelName || config.chatModelName,
+        model: config.codeModelName,
         max_tokens: config.codeMaxTokens,
         temperature: config.codeTemperature,
         presence_penalty: config.codePresencePenalty,

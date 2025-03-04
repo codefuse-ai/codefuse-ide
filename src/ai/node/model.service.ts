@@ -21,10 +21,6 @@ export class AIModelService {
     if (!config) return
     return {
       ...config,
-      chatTemperature: this.coerceNumber(config.chatTemperature, 0, 1, 0.2),
-      chatPresencePenalty: this.coerceNumber(config.chatPresencePenalty, -2, 2, 1),
-      chatFrequencyPenalty: this.coerceNumber(config.chatFrequencyPenalty, -2, 2, 1),
-      chatTopP: this.coerceNumber(config.chatTopP, 0, 1, 0.95),
       codeTemperature: this.coerceNumber(config.codeTemperature, 0, 1, 0.2),
       codePresencePenalty: this.coerceNumber(config.codePresencePenalty, -2, 2, 1),
       codeFrequencyPenalty: this.coerceNumber(config.codeFrequencyPenalty, -2, 2, 1),
