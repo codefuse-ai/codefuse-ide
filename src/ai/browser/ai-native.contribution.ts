@@ -67,8 +67,8 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       [
         {
           icon: getIcon('send-hollow'),
-          title: '生成 Java 快速排序算法',
-          message: '生成 Java 快速排序算法',
+          title: '介绍一下当前仓库',
+          message: '介绍一下当前仓库',
         },
       ],
     );
