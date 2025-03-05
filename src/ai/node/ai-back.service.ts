@@ -10,8 +10,9 @@ import { ILogServiceManager } from '@opensumi/ide-logs';
 import { AnthropicModel } from '@opensumi/ide-ai-native/lib/node/anthropic/anthropic-language-model';
 import { DeepSeekModel } from '@opensumi/ide-ai-native/lib/node/deepseek/deepseek-language-model';
 import { OpenAIModel } from '@opensumi/ide-ai-native/lib/node/openai/openai-language-model';
+import { OpenAICompatibleModel } from '@opensumi/ide-ai-native/lib/node/openai-compatible/openai-compatible-language-model';
 
-import { ChatCompletionChunk, ChatCompletion, Completion } from './types';
+import { ChatCompletion, Completion } from './types';
 import { AIModelService } from './model.service'
 
 @Injectable()
@@ -33,6 +34,9 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
   @Autowired(DeepSeekModel)
   protected readonly deepseekModel: DeepSeekModel;
 
+  @Autowired(OpenAICompatibleModel)
+  protected readonly openAICompatibleModel: OpenAICompatibleModel;
+
   constructor() {
     super();
     this.logger = this.loggerManager.getLogger('ai' as any);
@@ -50,8 +54,10 @@ export class AIBackService extends BaseAIBackService implements IAIBackService {
       this.openaiModel.request(input, chatReadableStream, options, cancelToken);
     } else if (model === 'deepseek') {
       this.deepseekModel.request(input, chatReadableStream, options, cancelToken);
-    } else {
+    } else if (model === 'anthropic') {
       this.anthropicModel.request(input, chatReadableStream, options, cancelToken);
+    } else {
+      this.openAICompatibleModel.request(input, chatReadableStream, options, cancelToken);
     }
 
     return chatReadableStream;

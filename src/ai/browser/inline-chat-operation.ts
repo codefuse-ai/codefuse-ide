@@ -52,7 +52,7 @@ export class InlineChatOperationModel {
     const prompt = commentsPrompt(crossCode);
 
     const controller = new InlineChatController({ enableCodeblockRender: true });
-    const stream = await this.aiBackService.requestStream(prompt, {}, token);
+    const stream = await this.aiBackService.requestStream(prompt, { noTool: true }, token);
     controller.mountReadable(stream);
 
     return controller;
@@ -78,7 +78,7 @@ export class InlineChatOperationModel {
     const prompt = optimizePrompt(crossCode);
 
     const controller = new InlineChatController({ enableCodeblockRender: true });
-    const stream = await this.aiBackService.requestStream(prompt, {}, token);
+    const stream = await this.aiBackService.requestStream(prompt, { noTool: true }, token);
     controller.mountReadable(stream);
 
     return controller;

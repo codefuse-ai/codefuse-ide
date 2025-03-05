@@ -244,7 +244,7 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
           }
 
           const controller = new InlineChatController({ enableCodeblockRender: true });
-          const stream = await this.aiBackService.requestStream(prompt, {}, token);
+          const stream = await this.aiBackService.requestStream(prompt, { noTool: true }, token);
           controller.mountReadable(stream);
 
           return controller;
@@ -348,7 +348,7 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       const prompt = terminalCommandSuggestionPrompt(message);
 
       aiCommandSuggestions = [];
-      const backStream = await this.aiBackService.requestStream(prompt, {}, token);
+      const backStream = await this.aiBackService.requestStream(prompt, { noTool: true }, token);
       const stream = TerminalSuggestionReadableStream.create();
 
       let buffer = '';
@@ -406,7 +406,7 @@ ${editor.getModel()!.getValueInRange(editRange)}
         不需要任何解释，只要返回修复后的代码块内容`;
 
         const controller = new InlineChatController({ enableCodeblockRender: true });
-        const stream = await this.aiBackService.requestStream(prompt, {}, token);
+        const stream = await this.aiBackService.requestStream(prompt, { noTool: true }, token);
         controller.mountReadable(stream);
 
         return controller;
