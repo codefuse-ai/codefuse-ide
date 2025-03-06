@@ -39,7 +39,7 @@
     "@types/js-yaml": "^4",
     "@types/koa": "^2",
     "@types/node": "^22.8.1",
-    "@types/react": "^18.3.3",
+    "@types/react": "^19.0.2",
     "@types/react-dom": "^18.3.1",
     "app-builder-bin": "^4.2.0",
     "app-builder-lib": "25.1.8",
@@ -141,7 +141,7 @@
     "koa-static": "^5.0.0",
     "mri": "^1.2.0",
     "process": "^0.11.10",
-    "react": "^18.3.1",
+    "react": "^19.0.0",
     "react-dom": "^18.3.1"
   },
   "packageManager": "yarn@4.3.1",
