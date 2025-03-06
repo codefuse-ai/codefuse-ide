@@ -57,6 +57,7 @@ import { CoreBrowserModule, ELECTRON_HEADER } from '@/core/browser';
 import { AIFeatureModule, AI_MENU_BAR_LEFT_ACTION } from '@/ai/browser';
 import { AutoUpdaterModule } from '@/auto-updater/browser'
 import logo from '@/core/browser/assets/logo.svg'
+import { DefaultSystemPrompt } from '@/ai/browser/prompt';
 
 // 临时修复 bash 打开 -l 参数不支持导致报错的问题
 terminalPreferenceSchema.properties['terminal.integrated.shellArgs.osx'].default = [];
@@ -178,6 +179,7 @@ async function renderApp() {
       // 开启 Code Edits
       [AINativeSettingSectionsId.CodeEditsLintErrors]: true,
       [AINativeSettingSectionsId.CodeEditsLineChange]: true,
+      [AINativeSettingSectionsId.SystemPrompt]: DefaultSystemPrompt,
     },
     onigWasmUri: URI.file(electronEnv.onigWasmPath).toString(true),
     treeSitterWasmDirectoryUri: URI.file(electronEnv.treeSitterWasmDirectoryPath).toString(true),
