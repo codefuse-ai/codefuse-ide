@@ -1,5 +1,5 @@
 import { Autowired } from '@opensumi/di'
-import { AI_NATIVE_SETTING_GROUP_ID, localize, MaybePromise, Delayer, CommandService } from '@opensumi/ide-core-common';
+import { AI_NATIVE_SETTING_GROUP_ID, localize, MaybePromise, Delayer, CommandService, AINativeSettingSectionsId } from '@opensumi/ide-core-common';
 import { Domain, PreferenceContribution, PreferenceSchema, ClientAppContribution, IClientApp, PreferenceService, COMMON_COMMANDS, IPreferenceSettingsService } from '@opensumi/ide-core-browser'
 import { ISettingRegistry, SettingContribution } from '@opensumi/ide-preferences';
 import { AIModelServicePath, IAIModelServiceProxy, ModelSettingId } from '../common'
@@ -17,46 +17,6 @@ const aiNativePreferenceSchema: PreferenceSchema = {
     },
     [ModelSettingId.apiKey]: {
       type: 'string',
-    },
-    [ModelSettingId.chatModelName]: {
-      type: 'string',
-    },
-    [ModelSettingId.chatSystemPrompt]: {
-      type: 'string',
-    },
-    [ModelSettingId.chatMaxTokens]: {
-      type: 'number',
-      minimum: 0,
-      defaultValue: 1024,
-      description: localize('preference.ai.model.maxTokens.description'),
-    },
-    [ModelSettingId.chatTemperature]: {
-      type: 'string',
-      // minimum: 0,
-      // maximum: 1,
-      defaultValue: '0.20',
-      description: localize('preference.ai.model.temperature.description'),
-    },
-    [ModelSettingId.chatPresencePenalty]: {
-      type: 'string',
-      // minimum: -2.0,
-      // maximum: 2.0,
-      defaultValue: '1.0',
-      description: localize('preference.ai.model.presencePenalty.description'),
-    },
-    [ModelSettingId.chatFrequencyPenalty]: {
-      type: 'string',
-      // minimum: -2.0,
-      // maximum: 2.0,
-      defaultValue: '1.0',
-      description: localize('preference.ai.model.frequencyPenalty.description'),
-    },
-    [ModelSettingId.chatTopP]: {
-      type: 'string',
-      // minimum: 0,
-      // maximum: 1,
-      defaultValue: '1',
-      description: localize('preference.ai.model.topP.description'),
     },
     [ModelSettingId.codeModelName]: {
       type: 'string',
@@ -145,11 +105,8 @@ export class AIModelContribution implements PreferenceContribution, SettingContr
         delayer.trigger(() => this.setModeConfig(values))
       })
     })
-    this.checkModelConfig(values).then((valid) => {
-      if (valid) {
-        delayer.trigger(() => this.setModeConfig(values))
-      }
-    })
+    delayer.trigger(() => this.setModeConfig(values));
+    this.checkModelConfig();
   }
 
   registerSetting(registry: ISettingRegistry): void {
@@ -163,34 +120,6 @@ export class AIModelContribution implements PreferenceContribution, SettingContr
         {
           id: ModelSettingId.apiKey,
           localized: 'preference.ai.model.apiKey',
-        },
-        {
-          id: ModelSettingId.chatModelName,
-          localized: 'preference.ai.model.chat.modelName',
-        },
-        {
-          id: ModelSettingId.chatSystemPrompt,
-          localized: 'preference.ai.model.chat.systemPrompt',
-        },
-        {
-          id: ModelSettingId.chatMaxTokens,
-          localized: 'preference.ai.model.chat.maxTokens',
-        },
-        {
-          id: ModelSettingId.chatTemperature,
-          localized: 'preference.ai.model.chat.temperature',
-        },
-        {
-          id: ModelSettingId.chatPresencePenalty,
-          localized: 'preference.ai.model.chat.presencePenalty',
-        },
-        {
-          id: ModelSettingId.chatFrequencyPenalty,
-          localized: 'preference.ai.model.chat.frequencyPenalty',
-        },
-        {
-          id: ModelSettingId.chatTopP,
-          localized: 'preference.ai.model.chat.topP',
         },
         {
           id: ModelSettingId.codeModelName,
@@ -228,18 +157,24 @@ export class AIModelContribution implements PreferenceContribution, SettingContr
     });
   }
 
-  private async checkModelConfig(values: Record<string, any>) {
-    if (values.baseUrl && values.chatModelName) {
-      return true
+  private async checkModelConfig() {
+    const requirePreference = [
+      AINativeSettingSectionsId.DeepseekApiKey,
+      AINativeSettingSectionsId.OpenaiApiKey,
+      AINativeSettingSectionsId.AnthropicApiKey,
+    ];
+
+    const hasRequirePreference = requirePreference.some(preference => !!this.preferenceService.getValid(preference));
+    if (!hasRequirePreference) {
+      this.preferenceService.has(AINativeSettingSectionsId.DeepseekApiKey);
+      const res = await this.messageService.info(localize('ai.model.noConfig'), [
+        localize('ai.model.go')
+      ]);
+      if (res === localize('ai.model.go')) {
+        await this.commandService.executeCommand(COMMON_COMMANDS.OPEN_PREFERENCES.id)
+        this.preferenceSettingsService.scrollToPreference(AINativeSettingSectionsId.LLMModelSelection);
+      }
     }
-    const res = await this.messageService.info(localize('ai.model.noConfig'), [
-      localize('ai.model.go')
-    ])
-    if (res === localize('ai.model.go')) {
-      await this.commandService.executeCommand(COMMON_COMMANDS.OPEN_PREFERENCES.id)
-      this.preferenceSettingsService.scrollToPreference(ModelSettingId.baseUrl)
-    }
-    return false
   }
 
   private setModeConfig(values: Record<string, any>) {

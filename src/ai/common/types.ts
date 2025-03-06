@@ -9,13 +9,6 @@ export interface IAIModelServiceProxy {
 export const ModelSettingId = {
   baseUrl: 'ai.model.baseUrl',
   apiKey: 'ai.model.apiKey',
-  chatModelName: 'ai.model.chat.modelName',
-  chatSystemPrompt: 'ai.model.chat.systemPrompt',
-  chatTemperature: 'ai.model.chat.temperature',
-  chatMaxTokens: 'ai.model.chat.maxTokens',
-  chatPresencePenalty: 'ai.model.chat.presencePenalty',
-  chatFrequencyPenalty: 'ai.model.chat.frequencyPenalty',
-  chatTopP: 'ai.model.chat.topP',
   codeModelName: 'ai.model.code.modelName',
   codeSystemPrompt: 'ai.model.code.systemPrompt',
   codeFimTemplate: 'ai.model.code.fimTemplate',

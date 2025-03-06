@@ -67,150 +67,10 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       [
         {
           icon: getIcon('send-hollow'),
-          title: '生成 Java 快速排序算法',
-          message: '生成 Java 快速排序算法',
+          title: '介绍一下当前仓库',
+          message: '介绍一下当前仓库',
         },
       ],
-    );
-
-    const interceptExecute = (value: string, slash: string, editor?: ICodeEditor): string => {
-      if (!editor) {
-        return '';
-      }
-      const model = editor.getModel();
-
-      const selection = editor.getSelection();
-      let selectCode: string | undefined;
-      if (selection) {
-        selectCode = model!.getValueInRange(selection);
-      }
-
-      const parseValue = value.replace(slash, '');
-
-      if (!parseValue.trim()) {
-        if (!selectCode) {
-          this.messageService.info('很抱歉，您并未选中或输入任何代码，请先选中或输入代码');
-          return '';
-        }
-
-        return value + `\n\`\`\`${model?.getLanguageId()}\n${selectCode}\n\`\`\``;
-      }
-
-      return value;
-    };
-
-    registry.registerSlashCommand(
-      {
-        name: 'Explain',
-        description: '解释代码',
-        isShortcut: true,
-        tooltip: '解释代码',
-      },
-      {
-        providerInputPlaceholder(_value, _editor) {
-          return '请输入或者粘贴代码';
-        },
-        providerPrompt(value: string, editor?: ICodeEditor) {
-          if (!editor) {
-            return value;
-          }
-          const parseValue = value.replace('/Explain', '');
-          const model = editor.getModel();
-          return explainPrompt(model?.getLanguageId() || '', parseValue);
-        },
-        execute: (value: string, send: TChatSlashCommandSend, editor?: ICodeEditor) => {
-          const parseValue = interceptExecute(value, '/Explain', editor);
-
-          if (!parseValue) {
-            return;
-          }
-
-          send(parseValue);
-        },
-      },
-    );
-
-    registry.registerSlashCommand(
-      {
-        name: 'Test',
-        description: '生成单测',
-        isShortcut: true,
-        tooltip: '生成单测'
-      },
-      {
-        providerInputPlaceholder(_value, _editor) {
-          return '请输入或者粘贴代码';
-        },
-        providerPrompt(value: string, editor?: ICodeEditor) {
-          if (!editor) {
-            return value;
-          }
-          const parseValue = value.replace('/Text', '');
-          return testPrompt(parseValue);
-        },
-        execute: (value: string, send: TChatSlashCommandSend, editor?: ICodeEditor) => {
-          const parseValue = interceptExecute(value, '/Text', editor);
-
-          if (!parseValue) {
-            return;
-          }
-
-          send(parseValue);
-        },
-      },
-    );
-
-    registry.registerSlashCommand(
-      {
-        name: 'Optimize',
-        description: '优化代码',
-        isShortcut: true,
-        tooltip: '优化代码'
-      },
-      {
-        providerInputPlaceholder(_value, _editor) {
-          return '请输入或者粘贴代码';
-        },
-        providerPrompt(value: string, editor?: ICodeEditor) {
-          if (!editor) {
-            return value;
-          }
-          const parseValue = value.replace('/Optimize', '');
-          return optimizePrompt(parseValue);
-        },
-        execute: (value: string, send: TChatSlashCommandSend, editor?: ICodeEditor) => {
-          const parseValue = interceptExecute(value, '/Optimize', editor);
-
-          if (!parseValue) {
-            return;
-          }
-
-          send(parseValue);
-        },
-      },
-    );
-
-    registry.registerSlashCommand(
-      {
-        name: 'IDE',
-        description: '执行 IDE 相关命令',
-      },
-      {
-        providerInputPlaceholder(_value, _editor) {
-          return '可以问我任何问题，或键入主题 \"/\"';
-        },
-        providerRender: CommandRender,
-        execute: (value: string, send: TChatSlashCommandSend) => {
-          const parseValue = value.replace('/IDE', '');
-
-          if (!parseValue) {
-            this.messageService.warning('请输入要执行的 IDE 命令');
-            return;
-          }
-
-          send(parseValue);
-        },
-      },
     );
   }
 
@@ -384,7 +244,7 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
           }
 
           const controller = new InlineChatController({ enableCodeblockRender: true });
-          const stream = await this.aiBackService.requestStream(prompt, {}, token);
+          const stream = await this.aiBackService.requestStream(prompt, { noTool: true }, token);
           controller.mountReadable(stream);
 
           return controller;
@@ -488,7 +348,7 @@ export class AINativeContribution implements ComponentContribution, AINativeCore
       const prompt = terminalCommandSuggestionPrompt(message);
 
       aiCommandSuggestions = [];
-      const backStream = await this.aiBackService.requestStream(prompt, {}, token);
+      const backStream = await this.aiBackService.requestStream(prompt, { noTool: true }, token);
       const stream = TerminalSuggestionReadableStream.create();
 
       let buffer = '';
@@ -546,7 +406,7 @@ ${editor.getModel()!.getValueInRange(editRange)}
         不需要任何解释，只要返回修复后的代码块内容`;
 
         const controller = new InlineChatController({ enableCodeblockRender: true });
-        const stream = await this.aiBackService.requestStream(prompt, {}, token);
+        const stream = await this.aiBackService.requestStream(prompt, { noTool: true }, token);
         controller.mountReadable(stream);
 
         return controller;
