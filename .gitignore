@@ -34,7 +34,7 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
+
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -107,3 +107,4 @@ package-lock.json
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+node_modules
